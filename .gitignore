@@ -1,0 +1,9 @@
+# dependencies / build caches
+node_modules/
+remotion/node_modules/
+
+# local working files (screenshots, drafts)
+.ignore/
+*.bak
+
+# keep the rendered media in remotion/out/ (committed deliverables)

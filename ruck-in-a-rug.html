@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Physics of a Runner Rippling over Carpet — The Ruck in a Rug</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], tags: 'ams' },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js" async></script>
+<style>
+  :root{ --fg:#1a1a1a; --muted:#555; --accent:#7a1f1f; --rule:#ddd; --box:#f6f4ef; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{ max-width: 50rem; margin: 2.5rem auto; padding: 0 1.25rem 6rem;
+        font: 16px/1.65 Georgia, 'Times New Roman', serif; color:var(--fg); }
+  h1{ font-size: 1.9rem; line-height:1.2; margin:.2rem 0 .2rem; }
+  h2{ font-size:1.35rem; margin:2.4rem 0 .6rem; border-bottom:2px solid var(--accent); padding-bottom:.2rem; }
+  h3{ font-size:1.1rem; margin:1.6rem 0 .4rem; color:var(--accent); }
+  .sub{ color:var(--muted); font-style:italic; margin-top:0; }
+  code{ font-family: ui-monospace,'SFMono-Regular',Consolas,monospace; font-size:.92em; }
+  .thm,.def,.lem,.prop{ background:var(--box); border-left:4px solid var(--accent); padding:.6rem .9rem; margin:1rem 0; border-radius:0 4px 4px 0; }
+  .thm b,.def b,.lem b,.prop b{ color:var(--accent); }
+  .proof{ border-left:2px solid var(--rule); padding-left:.9rem; margin:.8rem 0 1.2rem; color:#222; }
+  .proof::before{ content:"Proof."; font-style:italic; font-weight:bold; margin-right:.4rem; }
+  .qed{ float:right; }
+  table{ border-collapse:collapse; width:100%; margin:1rem 0; font-size:.95rem; }
+  th,td{ border:1px solid var(--rule); padding:.45rem .6rem; text-align:left; vertical-align:top; }
+  th{ background:var(--box); }
+  figure{ margin:1.5rem 0; text-align:center; }
+  figcaption{ color:var(--muted); font-size:.9rem; font-style:italic; margin-top:.4rem; }
+  .proof figure,.thm figure,.lem figure,.prop figure{ margin:.2rem auto .7rem; max-width:440px; background:#fff; border:1px solid var(--rule); border-radius:5px; padding:.4rem; }
+  .proof figcaption,.thm figcaption,.lem figcaption,.prop figcaption{ font-size:.8rem; line-height:1.4; }
+  .setupfig{ display:block; }
+  .secref{ color:#7a1f1f; text-decoration:none; border-bottom:1px dotted #b98; }
+  .secref:hover{ border-bottom:1px solid #7a1f1f; }
+  .toc{ background:var(--box); padding:.8rem 1.2rem; border-radius:6px; font-size:.95rem; }
+  .toc ol{ margin:.3rem 0; } .toc a{ color:var(--accent); text-decoration:none; }
+  .small{ font-size:.88rem; color:var(--muted); }
+  hr{ border:none; border-top:1px solid var(--rule); margin:2.5rem 0; }
+  .keyresult{ background:#fdf7e3; border:1px solid #e3d27a; padding:.5rem .9rem; border-radius:4px; }
+</style>
+</head>
+<body>
+
+<h1>The Physics of a Runner Rippling over Carpet</h1>
+<p class="sub">A mathematically rigorous treatment of the <em>ruck in a rug</em>: statics by elastica theory, kinematics by rolling without slip, dynamics by an effective-mass theorem, and the exact correspondence to dislocation glide. Prepared for a graduate (PhD) readership.</p>
+
+<div class="toc">
+<b>Contents</b>
+<ul style="list-style:none; padding-left:.3rem;">
+<li><b>0.</b> <a href="#origin">How a ruck is born: walking and rolling loads</a></li>
+<li><b>1.</b> <a href="#setup">Physical setup, notation, and the bending law</a></li>
+<li><b>2.</b> <a href="#statics">The equilibrium shape: the heavy-elastica equation</a></li>
+<li><b>3.</b> <a href="#nd">The natural length scale of a ruck</a></li>
+<li><b>4.</b> <a href="#shape">The shape of a shallow ruck</a></li>
+<li><b>5.</b> <a href="#scaling">Selecting the ruck&rsquo;s height and length</a></li>
+<li><b>6.</b> <a href="#regimes">Two asymptotic regimes</a></li>
+<li><b>7.</b> <a href="#kinematics">Kinematics — the ruck rolls like a wheel</a></li>
+<li><b>8.</b> <a href="#effmass">Dynamics I — the effective-mass theorem</a></li>
+<li><b>9.</b> <a href="#incline">Dynamics II — acceleration and driven motion</a></li>
+<li><b>10.</b> <a href="#dislocation">Why moving the ruck moves the whole carpet</a></li>
+<li><b>11.</b> <a href="#example">Worked example with realistic numbers</a></li>
+<li><b>12.</b> <a href="#summary">Summary of results</a></li>
+<li><b>A1.</b> <a href="#firstint">Appendix — first integral of the heavy elastica</a></li>
+<li><b>A2.</b> <a href="#pendulum">Appendix — pendulum reduction and the gravity-free loop</a></li>
+<li><b>A3.</b> <a href="#appendix">Appendix — the nonlinear loop in elliptic integrals</a></li>
+<li><b>13.</b> <a href="#refs">References and open problems</a></li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="origin">0. How a ruck is born: walking and rolling loads</h2>
+
+<p>A <em>ruck</em> — a localized raised wrinkle or loop in a rug, the everyday "rug ripple" — does not appear on its own. It must first be <em>nucleated</em> (created out of the initially flat sheet: excess length and in-plane compression build up in the <em>runner</em>, a long narrow rug, until it <em>buckles</em> — bows abruptly up out of the floor plane) and then <em>propagated</em> (pushed bodily along the rug). Two everyday situations do exactly this, and they are not anecdotes: each maps precisely onto one of the dynamical regimes derived later. We set the stage with them, then take the resulting ruck as the object of analysis.</p>
+
+<figure>
+<svg viewBox="0 0 580 240" width="100%" style="max-width:580px" role="img" aria-label="Two ways a ruck is created: walking and a rolling load">
+  <defs>
+    <marker id="o-ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+    <marker id="o-ahg" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="o-ahk" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+  </defs>
+
+  <!-- ===== Panel A: walking ===== -->
+  <text x="10" y="22" font-size="12.5" fill="#1a1a1a" font-weight="bold">A.  Walking: ratchet nucleation</text>
+  <line x1="10" y1="170" x2="270" y2="170" stroke="#999" stroke-width="1.5"/>
+  <!-- runner with a small nascent ruck ahead -->
+  <path d="M10,170 L150,170 C172,170 176,128 198,128 C220,128 224,170 246,170 L270,170"
+        fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <text x="176" y="120" font-size="10.5" fill="#7a1f1f" font-style="italic">nascent ruck (Δ)</text>
+  <!-- shoe sole pushing back -->
+  <rect x="70" y="150" width="58" height="13" rx="6" fill="#444"/>
+  <line x1="99" y1="150" x2="99" y2="132" stroke="#444" stroke-width="6"/>
+  <line x1="118" y1="163" x2="92" y2="178" stroke="#7a1f1f" stroke-width="2.4" marker-end="url(#o-ah)"/>
+  <text x="34" y="195" font-size="10.5" fill="#7a1f1f" font-style="italic">push-off (friction)</text>
+  <!-- compression arrows ahead -->
+  <line x1="138" y1="186" x2="156" y2="186" stroke="#2a7d2a" stroke-width="2" marker-end="url(#o-ahg)"/>
+  <line x1="186" y1="186" x2="168" y2="186" stroke="#2a7d2a" stroke-width="2" marker-end="url(#o-ahg)"/>
+  <text x="120" y="208" font-size="10.5" fill="#2a7d2a" font-style="italic">compression builds → buckles up</text>
+
+  <!-- divider -->
+  <line x1="290" y1="14" x2="290" y2="220" stroke="#ddd" stroke-width="1"/>
+
+  <!-- ===== Panel B: rolling load ===== -->
+  <text x="306" y="22" font-size="12.5" fill="#1a1a1a" font-weight="bold">B.  Rolling load: driven ruck (c = U)</text>
+  <line x1="306" y1="170" x2="566" y2="170" stroke="#999" stroke-width="1.5"/>
+  <!-- wheel -->
+  <circle cx="380" cy="142" r="28" fill="none" stroke="#444" stroke-width="3"/>
+  <circle cx="380" cy="142" r="3" fill="#444"/>
+  <line x1="380" y1="142" x2="400" y2="122" stroke="#444" stroke-width="1.5"/>
+  <!-- speed U -->
+  <line x1="360" y1="104" x2="412" y2="104" stroke="#1c5e8c" stroke-width="2.2" marker-end="url(#o-ahk)"/>
+  <text x="416" y="108" font-size="12" fill="#1c5e8c" font-style="italic">U</text>
+  <!-- bow-wave ruck ahead, traveling with wheel -->
+  <path d="M306,170 L430,170 C452,170 456,126 478,126 C500,126 504,170 526,170 L566,170"
+        fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <line x1="455" y1="112" x2="505" y2="112" stroke="#7a1f1f" stroke-width="2.2" marker-end="url(#o-ah)"/>
+  <text x="458" y="106" font-size="11" fill="#7a1f1f" font-style="italic">ruck, c = U</text>
+  <text x="372" y="208" font-size="10.5" fill="#555" font-style="italic">bow wave travels with the wheel</text>
+</svg>
+<figcaption>Two origins of a ruck. <b>(A)</b> Each footfall shears the runner backward through friction; the irrecoverable part of the shove ratchets <em>excess length</em> $\Delta$ (surplus material beyond the flat base it covers) into the sheet until the flat state buckles into a localized loop. <b>(B)</b> A rolling load (wheelchair, cart, castor) drives a bow-wave ruck whose <em>propagation speed</em> $c$ stays locked to the <em>load speed</em> $U$.</figcaption>
+</figure>
+
+<h3 id="walk">0.1 Walking: a frictional ratchet that pumps in excess length</h3>
+
+<p>At each step the sole presses the runner down (a normal load) and, during push-off, shoves it tangentially backward through static friction. Friction transmits a shear traction $\tau$ to the rug; the material just ahead of the foot is put into compression, the material behind into tension. Because the rug–floor contact is <em>unilateral and frictional</em>, the backward shove on push-off is not fully reversed when the foot lifts: a small net rearward slip survives each step. Step after step this is a <strong>ratchet</strong> — it pumps material into a region and raises the local compressive thrust $P$, the same "rug creep" by which loose carpets migrate across a room.</p>
+
+<p>While $P$ is small, gravity and friction pin the sheet flat. Nucleation occurs when $P$ reaches a <em>threshold thrust</em> $P_c$ at which the gravity-loaded flat state becomes susceptible to buckling — derived in <a class="secref" href="#onset">§4.1</a>, with the footfall pumping mechanism made quantitative in <a class="secref" href="#ratchet">§4.2</a>. Dimensionally, $P_c$ is fixed by the only force scale formable from the runner's <em>bending stiffness</em> $B$ (its resistance to being curved, defined in <a class="secref" href="#setup">§1</a> and <a class="secref" href="#bendlaw">§1.1</a>) and its <em>weight per unit length</em> $w$:
+$$P_c\;\sim\;\frac{B}{\ell_{eg}^{2}}\;=\;\bigl(B\,w^{2}\bigr)^{1/3}.$$
+Here $\ell_{eg}=(B/w)^{1/3}$ is the <em>elasto-gravity length</em>, the scale at which bending and gravity balance (introduced in <a class="secref" href="#nd">§3</a>). Below $P_c$ the runner merely creeps (slips back elastically); at $P_c$ the stored compression snaps out of plane into a localized loop, trapping a conserved excess length $\Delta$. <em>That snap is the ripple you feel form underfoot.</em> Walking therefore does two things and no more: it <strong>sets $\Delta$</strong> and leaves behind a <strong>free ruck</strong> — one you can subsequently kick along (the inertial, coasting regime of <a class="secref" href="#kinematics">§§7–9</a>).</p>
+
+<h3 id="wheel">0.2 Wheelchair: a moving load that carries its ruck along</h3>
+
+<p>A wheel rolling along the runner continuously pushes a small bow wave of material ahead of its contact line. Unlike the footfall, this forcing never stops while the chair moves, so the ruck it raises is not free but <strong>driven</strong>: it is phase-locked to the wheel, and its <em>propagation speed</em> $c$ equals the <em>load speed</em> $U$,
+$$c \;=\; U .$$
+This is the driven, phase-locked case derived in <a class="secref" href="#driven">§9.1</a> (Theorem 6), with the rolling load supplying the drive in place of an incline; the free ruck of <a class="secref" href="#kinematics">§§7–8</a> is the special case $U\to0$ after one impulsive kick. When the chair stops, the drive vanishes and the ruck either pins (if the depinning threshold $\gamma$ of <a class="secref" href="#incline">§9</a> is not exceeded) or coasts a short distance and dies. The everyday observation that "the ripple moves along with the wheelchair" is the statement that a driven ruck inherits the velocity of its driver.</p>
+
+<div class="def"><b>The object we analyze.</b> Both scenarios produce the <em>same</em> object: a localized loop carrying a conserved excess length $\Delta$ (which acts as a <em>Burgers vector</em> — the fixed quantum of slip a travelling defect transports through a material, exactly as an atomic-scale dislocation does in a crystal; <a class="secref" href="#dislocation">§10</a>). Triggering reduces to two outputs — it <strong>injects $\Delta$</strong> and <strong>launches propagation</strong> (free, or driven by a moving load). Everything that follows takes $\Delta$ as a given initial condition, and the sections build in order: <a class="secref" href="#setup">§1</a> sets up the model and the bending law; <a class="secref" href="#statics">§2</a> derives the equilibrium equation and <a class="secref" href="#nd">§3</a> its natural length scale $\ell_{eg}$; <a class="secref" href="#shape">§§4–6</a> give the static shape, its height and length, and the two regimes; <a class="secref" href="#kinematics">§§7–9</a> treat the motion (free roll <a class="secref" href="#kinematics">§§7–8</a>, incline <a class="secref" href="#incline">§9</a>, wheelchair-driven lock <a class="secref" href="#driven">§9.1</a>); <a class="secref" href="#dislocation">§10</a> explains why moving this defect drags the whole runner. The nucleation onset behind <a class="secref" href="#walk">§0.1</a> is derived in <a class="secref" href="#onset">§§4.1–4.2</a>, and the $c=U$ lock behind <a class="secref" href="#wheel">§0.2</a> in <a class="secref" href="#driven">§9.1</a>. The exact nonlinear treatment is collected in the <a class="secref" href="#firstint">Appendix</a>.</div>
+
+<h2 id="setup">1. Physical setup, notation, and the bending law</h2>
+
+<p>A long, thin, heavy runner lies flat on a rigid horizontal floor (the carpet). A small excess of material is gathered into a localized raised loop — the <em>ruck</em> — that can be pushed along the runner. We model the runner as a <strong>planar inextensible Euler–Bernoulli elastica</strong> of unit width — an <em>elastica</em> being an idealized thin elastic strip that bends but does not stretch, with bending resistance proportional to how sharply it is curved (the precise content is assumptions (A1)–(A2) below and <a class="secref" href="#bendlaw">§1.1</a>). All extensive quantities are per unit transverse width.</p>
+
+<table>
+<tr><th>Symbol</th><th>Meaning</th><th>Dimensions</th></tr>
+<tr><td>$s$</td><td>arc length along the sheet</td><td>$\mathsf{L}$</td></tr>
+<tr><td>$\theta(s)$</td><td>tangent angle to the horizontal</td><td>$1$</td></tr>
+<tr><td>$\kappa=\theta'=d\theta/ds$</td><td>signed curvature</td><td>$\mathsf{L}^{-1}$</td></tr>
+<tr><td>$B=EI$</td><td>bending stiffness per unit width ($E$ = Young's modulus, $I$ = second moment of area; see <a class="secref" href="#bendlaw">§1.1</a>)</td><td>$\mathsf{M\,L^{3}\,T^{-2}}$ (energy·length)</td></tr>
+<tr><td>$m$</td><td>mass per unit length (= areal density, i.e. mass per unit floor area, × width)</td><td>$\mathsf{M\,L^{-1}}$</td></tr>
+<tr><td>$w=mg$</td><td>weight per unit length ($g$ = gravitational acceleration)</td><td>$\mathsf{M\,T^{-2}}$ (force/length)</td></tr>
+<tr><td>$\Delta$</td><td>excess length stored in the ruck</td><td>$\mathsf{L}$</td></tr>
+<tr><td>$L$</td><td>contour length of the lifted arc</td><td>$\mathsf{L}$</td></tr>
+<tr><td>$h,\ \lambda$</td><td>ruck height and horizontal span — $\lambda$ is the distance between the two contact points, identical to the base $b$ of Definition 1 ($\lambda=b$)</td><td>$\mathsf{L}$</td></tr>
+<tr><td>$c$</td><td>propagation (translation) speed of the ruck</td><td>$\mathsf{L\,T^{-1}}$</td></tr>
+</table>
+
+<div class="def"><b>Definition 1 (excess length).</b> Let the lifted arc have contour length $L$ (measured <em>along</em> the rippled sheet) and let its two contact points with the floor be separated by horizontal distance $b$ (the <em>base</em>, i.e. the straight-line footprint the ruck covers on the floor). <em>This base is the same quantity later called the span $\lambda$</em> — from <a class="secref" href="#shape">§4</a> on the shape is written $y(x)$ on $0\le x\le\lambda$, so $b=\lambda$ exactly. The conserved <em>excess length</em> is
+$$\Delta \;=\; L-b \;=\; \int_{0}^{L}\bigl(1-\cos\theta(s)\bigr)\,ds .$$
+Equivalently $L=b+\Delta=\lambda+\Delta$: the arc is longer than its floor footprint by exactly $\Delta$. $\Delta$ is set when the ruck is formed and is invariant under propagation (inextensibility + no tearing). It plays the role of a <em>topological charge</em> — a conserved label that no smooth, tearing-free deformation of the sheet can change.</div>
+
+<figure>
+<svg viewBox="0 0 560 290" width="100%" style="max-width:560px" role="img" aria-label="Labelled geometry of the ruck defining the symbols">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker>
+    <marker id="ahr" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+    <marker id="ahb" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+  </defs>
+
+  <!-- floor -->
+  <line x1="20" y1="210" x2="540" y2="210" stroke="#999" stroke-width="1.5"/>
+  <text x="28" y="205" font-size="11" fill="#999" font-style="italic">floor (carpet)</text>
+
+  <!-- osculating circle at crest: radius = true radius of curvature of the crest (R = 1/kappa ≈ 43 px) -->
+  <circle cx="285" cy="113" r="43" fill="none" stroke="#1c5e8c" stroke-width="1" stroke-dasharray="4,3" opacity="0.8"/>
+  <line x1="285" y1="113" x2="285" y2="70" stroke="#1c5e8c" stroke-width="1.2"/>
+  <circle cx="285" cy="113" r="2.5" fill="#1c5e8c"/>
+  <text x="291" y="101" font-size="12" fill="#1c5e8c" font-style="italic">R = 1/κ</text>
+
+  <!-- ruck curve -->
+  <path d="M20,210 L150,210 C215,210 222,70 285,70 C348,70 355,210 420,210 L540,210"
+        fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+
+  <!-- highlighted arc length s: EXACT sub-arc of the ruck curve from left contact to the marked point (de Casteljau split at t=1/2) -->
+  <path d="M150,210 C182.5,210 200.5,175 218.25,140" fill="none" stroke="#d98c00" stroke-width="4.5" opacity="0.9"/>
+  <text x="120" y="172" font-size="12.5" fill="#d98c00" font-style="italic">s</text>
+
+  <!-- contact points -->
+  <circle cx="150" cy="210" r="3.2" fill="#7a1f1f"/><circle cx="420" cy="210" r="3.2" fill="#7a1f1f"/>
+  <text x="138" y="226" font-size="10.5" fill="#555">contact</text>
+  <text x="404" y="226" font-size="10.5" fill="#555">contact</text>
+
+  <!-- tangent line GENUINELY tangent to the ruck curve at the marked point (218.25,140), t=1/2: direction ∝ B'(1/2)=(106.5,-210) -->
+  <circle cx="218.25" cy="140" r="3.4" fill="#222"/>
+  <line x1="186.7" y1="202.4" x2="249.9" y2="77.6" stroke="#222" stroke-width="1.8"/>
+  <line x1="218.25" y1="140" x2="288" y2="140" stroke="#222" stroke-width="1" stroke-dasharray="4,3"/>
+  <path d="M250.25,140 A32,32 0 0 0 232.7,111.5" fill="none" stroke="#222" stroke-width="1.3"/>
+  <text x="256" y="131" font-size="13" fill="#222" font-style="italic">θ</text>
+  <text x="250" y="73" font-size="11" fill="#222" font-style="italic">tangent t̂</text>
+
+  <!-- height h: offset dimension with an extension line from the crest so it clears the osculating circle -->
+  <line x1="285" y1="70" x2="340" y2="70" stroke="#555" stroke-width="0.8" stroke-dasharray="3,3"/>
+  <line x1="333" y1="70" x2="333" y2="210" stroke="#555" stroke-width="1" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <text x="339" y="150" font-size="13" fill="#555" font-style="italic">h</text>
+
+  <!-- span lambda -->
+  <line x1="150" y1="240" x2="420" y2="240" stroke="#555" stroke-width="1" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <text x="285" y="255" font-size="12.5" fill="#555" text-anchor="middle" font-style="italic">λ  (span; contour L = λ + Δ)</text>
+
+  <!-- weight arrows w = mg -->
+  <line x1="357" y1="120" x2="357" y2="150" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#ah)"/>
+  <line x1="375" y1="150" x2="375" y2="180" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#ah)"/>
+  <line x1="393" y1="178" x2="393" y2="200" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#ah)"/>
+  <text x="430" y="160" font-size="12" fill="#2a7d2a" font-style="italic">w = m g</text>
+
+  <!-- propagation c -->
+  <line x1="235" y1="48" x2="345" y2="48" stroke="#7a1f1f" stroke-width="1.8" marker-end="url(#ahr)"/>
+  <text x="350" y="52" font-size="12.5" fill="#7a1f1f" font-style="italic">c  (propagation)</text>
+
+  <!-- B label -->
+  <text x="150" y="92" font-size="11.5" fill="#1c5e8c" font-style="italic">bending: M = B κ</text>
+</svg>
+<figcaption>Geometry of Section&nbsp;1. <b>$s$</b> arc length (orange) measured along the sheet from a contact point; <b>$\theta$</b> tangent angle to the horizontal, shown at the black point where the black straight line is <em>tangent</em> to (just grazes) the ruck curve — $\theta$ is the angle between that tangent and the dashed horizontal; <b>$\kappa=1/R$</b> curvature, shown by the blue <em>osculating circle</em> (the unique circle matching the curve's position, slope, and curvature) drawn at the crest with the true radius of curvature $R$, with $M=B\kappa$ the constitutive law; <b>$h$</b> height; <b>$\lambda$</b> horizontal span (= base $b$), with contour length $L=\lambda+\Delta$ and excess length $\Delta=L-\lambda$; <b>$w=mg$</b> weight per unit length (green); <b>$c$</b> propagation speed. The constitutive constants — bending stiffness $B=EI$ and mass per length $m$ — are properties of the runner material, not geometric features.</figcaption>
+</figure>
+
+<p><strong>Standing assumptions.</strong> (A1) Inextensibility: stretching energy $\gg$ bending energy, so the centre-line length is fixed. (A2) Euler–Bernoulli constitutive law: bending moment $M=B\kappa$. (A3) The unlifted runner lies flat and unstressed transversely; contact with the floor is unilateral (the sheet may lift away from the floor but cannot be pushed down through it) and frictionless <em>under</em> the static ruck (friction is restored only in <a class="secref" href="#incline">§9–10</a>). (A4) Planar deformation (cylindrical bending; the ruck is straight across the width). (A5) Smooth lift-off: at each contact point the sheet leaves the floor tangentially, $\theta=0$, with continuous curvature.</p>
+
+<h3 id="bendlaw">1.1 What the constitutive law $M=B\kappa$ means, term by term</h3>
+
+<p>This single relation — the bent sheet's <em>constitutive law</em> (the material rule tying the internal bending moment to the curvature it produces) — underlies every equation below, so we unpack it from first principles rather than quoting it. Consider a small element of the sheet bent to local radius $R=1/\kappa$. Choose a <em>neutral surface</em> (the midplane, by up–down symmetry) that neither stretches nor compresses, and measure the signed distance $z$ from it through the thickness $t$ (so $-t/2\le z\le t/2$).</p>
+
+<div class="lem"><b>Lemma 0 (Euler–Bernoulli bending law).</b> Plane sections remain plane and normal to the neutral surface (the kinematic hypothesis). Then a fibre at height $z$ has longitudinal strain
+$$\varepsilon(z)=\frac{z}{R}=\kappa\,z,\tag{1.1}$$
+its stress is Hookean, $\sigma(z)=E\,\varepsilon(z)=E\kappa z$, and the resultant <em>bending moment</em> per unit width about the neutral axis is
+$$M=\int_{-t/2}^{t/2}\!\sigma(z)\,z\,dz=E\kappa\int_{-t/2}^{t/2}\! z^2\,dz=E\,I\,\kappa\equiv B\,\kappa,
+\qquad I=\frac{t^3}{12},\quad B=\frac{E t^3}{12}.\tag{1.2}$$
+</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 440 230" width="100%" role="img" aria-label="Bending of a thin element: neutral surface, fibre at height z, radius R, and linear stress profile">
+  <defs><marker id="L0a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker></defs>
+  <!-- bent element wedge, centre of curvature O at bottom -->
+  <line x1="110" y1="212" x2="75.1" y2="45.7" stroke="#bbb" stroke-width="1"/>
+  <line x1="110" y1="212" x2="144.9" y2="45.7" stroke="#bbb" stroke-width="1"/>
+  <path d="M75.1,45.7 A168,168 0 0 1 144.9,45.7" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <path d="M78.8,63.3 A150,150 0 0 1 141.2,63.3" fill="none" stroke="#1c5e8c" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <path d="M81.9,78.0 A135,135 0 0 1 138.1,78.0" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <circle cx="110" cy="212" r="2.6" fill="#222"/>
+  <text x="92" y="224" font-size="12" fill="#222" font-style="italic">O</text>
+  <!-- dtheta at O -->
+  <path d="M103.8,182.7 A30,30 0 0 1 116.2,182.7" fill="none" stroke="#222" stroke-width="1.2"/>
+  <text x="104" y="176" font-size="11" fill="#222" font-style="italic">dθ</text>
+  <!-- R along right radial -->
+  <text x="132" y="140" font-size="12" fill="#555" font-style="italic">R</text>
+  <!-- thickness t and height z at right edge -->
+  <line x1="156" y1="45.7" x2="150" y2="78" stroke="#555" stroke-width="0.8"/>
+  <text x="159" y="65" font-size="11" fill="#555" font-style="italic">t</text>
+  <text x="150" y="40" font-size="11" fill="#1c5e8c" font-style="italic">z (from neutral)</text>
+  <text x="60" y="98" font-size="10.5" fill="#1c5e8c" font-style="italic">neutral surface (ε=0)</text>
+  <text x="40" y="20" font-size="11" fill="#7a1f1f" font-style="italic">outer fibre stretched</text>
+  <!-- stress profile inset -->
+  <line x1="320" y1="40" x2="320" y2="190" stroke="#888" stroke-width="1.2"/>
+  <text x="300" y="34" font-size="11" fill="#555" font-style="italic">z</text>
+  <line x1="320" y1="115" x2="300" y2="115" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="262" y="119" font-size="10.5" fill="#555" font-style="italic">neutral</text>
+  <line x1="320" y1="55" x2="392" y2="55" stroke="#2a7d2a" stroke-width="2" marker-end="url(#L0a)"/>
+  <line x1="320" y1="80" x2="368" y2="80" stroke="#2a7d2a" stroke-width="2" marker-end="url(#L0a)"/>
+  <line x1="320" y1="150" x2="272" y2="150" stroke="#2a7d2a" stroke-width="2" marker-end="url(#L0a)"/>
+  <line x1="320" y1="175" x2="248" y2="175" stroke="#2a7d2a" stroke-width="2" marker-end="url(#L0a)"/>
+  <line x1="392" y1="55" x2="248" y2="175" stroke="#2a7d2a" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="330" y="50" font-size="11" fill="#2a7d2a" font-style="italic">σ = E κ z</text>
+  <text x="340" y="92" font-size="10" fill="#555">+ tension</text>
+  <text x="250" y="200" font-size="10" fill="#555">− compression</text>
+</svg><figcaption><b>Setup.</b> A bent element subtends $d\theta=\kappa\,ds$ about the centre of curvature $O$; a fibre a height $z$ above the neutral surface is stretched by $\varepsilon=z/R=\kappa z$, so the stress $\sigma=E\kappa z$ varies linearly across the thickness $t$ (right), and its moment about the neutral axis is $M=\int\sigma z\,dz=EI\kappa$.</figcaption></figure>
+A fibre originally of length $ds$ on the neutral surface subtends angle $d\theta=\kappa\,ds$. A parallel fibre at height $z$ follows radius $R+z$, so its length is $(R+z)\,d\theta$, a fractional change $\varepsilon=\big[(R+z)-R\big]d\theta/(R\,d\theta)=z/R=\kappa z$, giving (1.1). Linear elasticity (Hooke) gives $\sigma=E\varepsilon$. Summing the moments of these fibre stresses about the neutral axis, $M=\int \sigma\, z\,dA$; per unit width $dA=dz$, and $\int_{-t/2}^{t/2}z^2dz=t^3/12=I$. Hence $M=EI\kappa$. The net axial force $\int\sigma\,dz=E\kappa\int z\,dz=0$ confirms the midplane is the correct neutral axis. <span class="qed">∎</span>
+</div>
+
+<p><strong>Reading each symbol.</strong></p>
+<ul>
+<li><b>$\kappa=1/R$ (curvature)</b> — purely geometric: how sharply the sheet is bent. Straight $\Rightarrow\kappa=0$; a tighter loop $\Rightarrow$ larger $\kappa$. It is the "displacement-like" variable.</li>
+<li><b>$M$ (bending moment)</b> — the internal restoring torque (per unit width, units of force, i.e. energy/length) that one part of the sheet exerts on the adjacent part across a cut. It is the "force-like" variable conjugate to $\kappa$.</li>
+<li><b>$E$ (Young's modulus)</b> — the <em>material's</em> stiffness (stress per unit strain). Steel is stiff, rubber is soft; it knows nothing about shape.</li>
+<li><b>$I=\int z^2\,dz=t^3/12$ (second moment of area)</b> — the <em>geometry's</em> contribution. Because material far from the neutral axis is strained most and has the longest lever arm, resistance grows as $z^2$; for a sheet this makes $B\propto t^3$. <em>Doubling the thickness makes the runner eight times stiffer in bending</em> — the single most important practical fact about why some rugs ruck easily and others do not.</li>
+<li><b>$B=EI$ (bending stiffness/rigidity)</b> — material × geometry, the proportionality constant of the bending "spring."</li>
+</ul>
+
+<p>Equivalently, $M=B\kappa$ is Hooke's law $F=kx$ for bending, and the elastic energy stored per unit length is the spring energy $\tfrac12 B\kappa^2$ — exactly the integrand of the bending term in <a class="secref" href="#statics">§2</a>. This is why bending a sheet into a ruck <em>costs</em> energy proportional to $B$ and to curvature squared.</p>
+
+<h2 id="statics">2. The equilibrium shape: the heavy-elastica equation</h2>
+
+<p>The equilibrium shape minimizes the total potential energy of the lifted arc subject to the inextensibility/geometry constraints. With $y(s)=\int_0^s\sin\theta\,ds'$ the height,</p>
+
+$$
+\mathcal E[\theta]=\underbrace{\frac{B}{2}\int_0^L (\theta')^2\,ds}_{\text{bending}}
+\;+\;\underbrace{w\int_0^L y\,ds}_{\text{gravity}}
+\;-\;H\Big(\int_0^L\cos\theta\,ds-b\Big),
+$$
+
+<p>where $H$ is a Lagrange multiplier enforcing the prescribed horizontal span $b$; physically $H$ is the constant horizontal force (thrust) transmitted by the flat aprons. Using Fubini to rewrite the gravity term,</p>
+
+$$\int_0^L y(s)\,ds=\int_0^L\!\!\int_0^s\sin\theta(u)\,du\,ds=\int_0^L (L-u)\sin\theta(u)\,du,$$
+
+<p>so</p>
+
+$$\mathcal E[\theta]=\int_0^L\Big[\tfrac{B}{2}(\theta')^2+w\,(L-s)\sin\theta-H\cos\theta\Big]ds+\text{const.}$$
+
+<div class="prop"><b>Proposition 1 (heavy-elastica equation).</b> A stationary configuration satisfies
+$$B\,\theta''(s)=w\,(L-s)\cos\theta+H\sin\theta,\qquad 0\lt s\lt L,\tag{2.1}$$
+with natural boundary conditions $\theta(0)=\theta(L)=0$ (A5) and $\theta'$ free if no end-moment is applied.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 440 200" width="100%" role="img" aria-label="Energy/force setup of the lifted arc: arc length s, angle theta, weight beyond s, thrust H">
+  <defs>
+    <marker id="P1g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="P1b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+  </defs>
+  <line x1="20" y1="170" x2="420" y2="170" stroke="#999" stroke-width="1.4"/>
+  <path d="M40,170 L120,170 C165,170 170,62 232,62 C294,62 299,170 344,170 L420,170" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <!-- arc length s highlighted from left contact to section P -->
+  <path d="M120,170 C150,170 162,142 176,118" fill="none" stroke="#d98c00" stroke-width="4.5" opacity="0.9"/>
+  <text x="126" y="152" font-size="12" fill="#d98c00" font-style="italic">s</text>
+  <circle cx="120" cy="170" r="3" fill="#7a1f1f"/><circle cx="344" cy="170" r="3" fill="#7a1f1f"/>
+  <!-- section P, tangent, theta -->
+  <circle cx="176" cy="118" r="3.2" fill="#222"/>
+  <line x1="150" y1="151" x2="206" y2="83" stroke="#222" stroke-width="1.5"/>
+  <line x1="176" y1="118" x2="228" y2="118" stroke="#222" stroke-width="0.9" stroke-dasharray="4,3"/>
+  <path d="M210,118 A34,34 0 0 0 199,93" fill="none" stroke="#222" stroke-width="1.2"/>
+  <text x="214" y="110" font-size="12" fill="#222" font-style="italic">θ</text>
+  <text x="120" y="92" font-size="10.5" fill="#222" font-style="italic">M = Bθ′</text>
+  <!-- weight of material beyond s -->
+  <line x1="232" y1="66" x2="232" y2="92" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P1g)"/>
+  <line x1="270" y1="78" x2="270" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P1g)"/>
+  <line x1="305" y1="104" x2="305" y2="130" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P1g)"/>
+  <text x="250" y="40" font-size="10.5" fill="#2a7d2a" font-style="italic">weight beyond s: w·(L−s)</text>
+  <!-- horizontal thrust H -->
+  <line x1="92" y1="170" x2="116" y2="170" stroke="#1c5e8c" stroke-width="2" marker-end="url(#P1b)"/>
+  <line x1="372" y1="170" x2="348" y2="170" stroke="#1c5e8c" stroke-width="2" marker-end="url(#P1b)"/>
+  <text x="74" y="186" font-size="12" fill="#1c5e8c" font-style="italic">H</text>
+  <text x="376" y="186" font-size="12" fill="#1c5e8c" font-style="italic">H</text>
+</svg><figcaption><b>Setup.</b> The lifted arc parametrised by arc length $s$ and tangent angle $\theta(s)$. Minimising $\mathcal E[\theta]$ balances three effects at each section: the bending moment $M=B\theta'$, the gravitational moment of the weight $w(L-s)$ lying beyond $s$, and the horizontal thrust $H$ from the flat aprons — giving (2.1).</figcaption></figure>
+The integrand is $F(s,\theta,\theta')=\tfrac B2(\theta')^2+w(L-s)\sin\theta-H\cos\theta$. The Euler–Lagrange equation $\frac{d}{ds}F_{\theta'}-F_\theta=0$ reads $\frac{d}{ds}(B\theta')-\big[w(L-s)\cos\theta+H\sin\theta\big]=0$, which is (2.1). Stationarity of the boundary term $[F_{\theta'}\delta\theta]_0^L=[B\theta'\,\delta\theta]_0^L$ vanishes because the lift-off condition (A5) fixes $\theta=0$ there ($\delta\theta=0$); if instead the ends were free, it would force the curvature $\theta'=0$ there. <span class="qed">∎</span>
+</div>
+
+<p>Equation (2.1) is the <em>heavy elastica</em>; the explicit $(L-s)$ is the moment of the weight beyond $s$. (An equivalent internal-force formulation, and the exact nonlinear solution it leads to, are collected in the <a class="secref" href="#firstint">Appendix</a> — useful for tall rucks, but not needed for the thread below.) Before solving (2.1), we pause on the one length scale the problem contains: it will turn out to be the ruck's own size.</p>
+
+<h2 id="nd">3. The natural length scale of a ruck (the elasto-gravity length)</h2>
+
+<p>A ruck is a standoff between the two effects already visible in the energy (<a class="secref" href="#statics">§2</a>): <em>bending</em>, which resists curving the sheet, and <em>gravity</em>, which resists lifting it. Bending alone would let a wrinkle spread out and flatten; gravity alone would pin the sheet down. When two effects compete, the place to start is the length at which they balance — and from the only two material constants, bending stiffness $B$ and weight per unit length $w$, exactly one length can be built:</p>
+
+<div class="keyresult">
+$$\boxed{\;\ell_{eg} \;=\; \left(\frac{B}{w}\right)^{1/3} \;=\; \left(\frac{EI}{mg}\right)^{1/3}\;}\qquad\text{(elasto-gravity length).}$$
+</div>
+
+<p>This is the length at which a horizontal flap of the rug droops by about its own length under its own weight: below $\ell_{eg}$ the sheet acts rigid (bending wins), above it floppy like heavy cloth (gravity wins). <strong>Concretely, it is the ruck's natural size.</strong> We will find a ruck's height and length are both $\ell_{eg}$ times a pure number depending only on $\Delta/\ell_{eg}$ (<a class="secref" href="#scaling">§5</a>), and that "rigid" vs "floppy" become the two ruck families of <a class="secref" href="#regimes">§6</a>. Every static and dynamic result below is a power of $\ell_{eg}$ and of the dimensionless excess length $\widehat\Delta=\Delta/\ell_{eg}$.</p>
+
+<figure>
+<svg viewBox="0 0 460 205" width="100%" style="max-width:440px" role="img" aria-label="Short flap stays rigid, long flap droops; the crossover overhang is the elasto-gravity length">
+  <defs><marker id="eg1g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker></defs>
+  <!-- wall / clamp -->
+  <line x1="70" y1="24" x2="70" y2="196" stroke="#444" stroke-width="2.5"/>
+  <line x1="70" y1="34" x2="58" y2="44" stroke="#888" stroke-width="1"/>
+  <line x1="70" y1="64" x2="58" y2="74" stroke="#888" stroke-width="1"/>
+  <line x1="70" y1="94" x2="58" y2="104" stroke="#888" stroke-width="1"/>
+  <line x1="70" y1="124" x2="58" y2="134" stroke="#888" stroke-width="1"/>
+  <line x1="70" y1="154" x2="58" y2="164" stroke="#888" stroke-width="1"/>
+  <line x1="70" y1="184" x2="58" y2="194" stroke="#888" stroke-width="1"/>
+  <!-- short, rigid flap -->
+  <path d="M70,58 Q125,61 180,67" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <line x1="112" y1="62" x2="112" y2="76" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#eg1g)"/>
+  <line x1="150" y1="65" x2="150" y2="79" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#eg1g)"/>
+  <text x="188" y="60" font-size="11" fill="#7a1f1f" font-style="italic">ℓ ≪ ℓ_eg : stays straight</text>
+  <text x="196" y="74" font-size="10" fill="#555" font-style="italic">(bending wins)</text>
+  <!-- long, floppy flap -->
+  <path d="M70,120 C140,124 205,150 240,194" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <line x1="120" y1="122" x2="120" y2="136" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#eg1g)"/>
+  <line x1="170" y1="136" x2="170" y2="150" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#eg1g)"/>
+  <text x="250" y="150" font-size="11" fill="#7a1f1f" font-style="italic">ℓ ≫ ℓ_eg : droops over</text>
+  <text x="258" y="164" font-size="10" fill="#555" font-style="italic">(gravity wins)</text>
+  <text x="250" y="120" font-size="10.5" fill="#2a7d2a" font-style="italic">w</text>
+  <!-- crossover note -->
+  <text x="80" y="100" font-size="11" fill="#1c5e8c" font-style="italic">crossover at ℓ = ℓ_eg = (B/w)¹ᐟ³</text>
+</svg>
+<figcaption>What $\ell_{eg}$ means. A short overhanging flap of the runner is held nearly straight by bending; a long one droops over under its own weight $w$. The crossover length — where the droop becomes comparable to the overhang itself — is $\ell_{eg}=(B/w)^{1/3}$. A ruck is the same competition, so $\ell_{eg}$ sets its size.</figcaption>
+</figure>
+
+<p class="proof" style="border:none;padding:0">
+<b>Dimensional check.</b> $[B]=\mathsf{M\,L^{3}\,T^{-2}}$, $[w]=\mathsf{M\,L^{-1}\cdot L\cdot T^{-2}}\!\cdot\!\mathsf L^{-1}=\mathsf{M\,T^{-2}}$. Then $[B/w]=\mathsf{L^{3}}$, so $[\ell_{eg}]=\mathsf L$. <span class="qed">∎</span></p>
+
+<h3>3.1 Why a length must exist, and what sets it</h3>
+
+<p>The dimensional argument guarantees a length but gives no feel for it. Here are two physical derivations; both return $\ell_{eg}=(B/w)^{1/3}$ up to an $O(1)$ constant, which is all a scaling length is ever defined to.</p>
+
+<p><strong>(i) Cantilever-droop derivation.</strong> Clamp a tongue of the runner horizontally and let a length $\ell$ stick out, sagging under its own weight $w$ per unit length. Small-deflection Euler–Bernoulli beam theory ($B\,y''''=-w$, the linearized <a class="secref" href="#shape">§4</a> equation with no thrust) integrates with clamped end $y(0)=y'(0)=0$ and free end $y''(\ell)=y'''(\ell)=0$ to the classical tip droop
+$$\delta=\frac{w\,\ell^{4}}{8B}.$$
+The tongue is "rigid" while $\delta\ll\ell$ and "floppy" once $\delta\gtrsim\ell$. The crossover $\delta\sim\ell$ gives $w\ell^4/B\sim\ell$, i.e.
+$$\ell\sim\Big(\tfrac{8B}{w}\Big)^{1/3}\sim\ell_{eg}.$$
+So <em>$\ell_{eg}$ is the overhang length at which a flap of the runner bends over by roughly its own length under gravity.</em> A stiff, light runner has a large $\ell_{eg}$ (it holds its shape — think cardboard); a floppy, heavy one has a small $\ell_{eg}$ (it collapses under its weight — think wet cloth).</p>
+
+<figure>
+<svg viewBox="0 0 440 200" width="100%" style="max-width:430px" role="img" aria-label="A clamped tongue of length l droops under its own weight by a tip deflection delta">
+  <defs>
+    <marker id="eg2g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="eg2d" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker>
+  </defs>
+  <!-- clamp / wall -->
+  <line x1="55" y1="28" x2="55" y2="150" stroke="#444" stroke-width="2.5"/>
+  <line x1="55" y1="40" x2="43" y2="50" stroke="#888" stroke-width="1"/>
+  <line x1="55" y1="58" x2="43" y2="68" stroke="#888" stroke-width="1"/>
+  <line x1="55" y1="76" x2="43" y2="86" stroke="#888" stroke-width="1"/>
+  <line x1="55" y1="94" x2="43" y2="104" stroke="#888" stroke-width="1"/>
+  <text x="40" y="24" font-size="10" fill="#555" font-style="italic">clamped end</text>
+  <text x="60" y="22" font-size="10" fill="#555" font-style="italic">y(0)=y′(0)=0</text>
+  <!-- undeformed reference -->
+  <line x1="55" y1="70" x2="395" y2="70" stroke="#bbb" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="300" y="64" font-size="9.5" fill="#999" font-style="italic">undeformed (rigid)</text>
+  <!-- drooped tongue -->
+  <path d="M55,70 C160,72 305,96 392,130" fill="none" stroke="#7a1f1f" stroke-width="2.8"/>
+  <!-- distributed weight w -->
+  <line x1="110" y1="71" x2="110" y2="91" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#eg2g)"/>
+  <line x1="175" y1="76" x2="175" y2="96" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#eg2g)"/>
+  <line x1="245" y1="84" x2="245" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#eg2g)"/>
+  <line x1="315" y1="99" x2="315" y2="119" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#eg2g)"/>
+  <text x="120" y="112" font-size="10.5" fill="#2a7d2a" font-style="italic">w (weight per length)</text>
+  <!-- length l -->
+  <line x1="55" y1="170" x2="392" y2="170" stroke="#555" stroke-width="0.9" marker-start="url(#eg2d)" marker-end="url(#eg2d)"/>
+  <text x="220" y="185" font-size="12" fill="#555" font-style="italic">ℓ  (overhang)</text>
+  <!-- droop delta -->
+  <line x1="392" y1="70" x2="392" y2="130" stroke="#1c5e8c" stroke-width="1" marker-start="url(#eg2d)" marker-end="url(#eg2d)"/>
+  <text x="398" y="104" font-size="12" fill="#1c5e8c" font-style="italic">δ</text>
+  <!-- formula -->
+  <text x="150" y="44" font-size="12" fill="#222" font-style="italic">δ = w ℓ⁴ / 8B</text>
+</svg>
+<figcaption><b>The cantilever-droop picture.</b> Clamp the runner at a wall and let a tongue of length $\ell$ stick out (left end fixed, $y(0)=y'(0)=0$). Its own weight $w$ per unit length bends it down; beam theory gives the tip droop $\delta=w\ell^4/8B$ below the rigid (dashed) line. The tongue reads "rigid" while $\delta\ll\ell$ and "floppy" once $\delta\gtrsim\ell$; setting $\delta\sim\ell$ gives $\ell\sim(8B/w)^{1/3}\sim\ell_{eg}$.</figcaption>
+</figure>
+
+<p><strong>(ii) Energy-balance derivation.</strong> Consider any localized feature of horizontal size $\ell$ and comparable height. Its curvature is $\kappa\sim 1/\ell$, so by <a class="secref" href="#bendlaw">§1.1</a> the stored bending energy per unit width is
+$$U_b\sim \tfrac12 B\kappa^2\cdot\ell\sim \frac{B}{\ell},$$
+which <em>falls</em> as the feature spreads out (gentle bends are cheap). Lifting that same material against gravity costs
+$$U_g\sim w\cdot\ell\cdot\ell=w\,\ell^2,$$
+which <em>rises</em> with size. Bending wants $\ell$ large, gravity wants $\ell$ small; they balance at $B/\ell\sim w\ell^2\Rightarrow \ell\sim(B/w)^{1/3}=\ell_{eg}$. Every selected length in this problem (notably the ruck length $\lambda_\star$ of <a class="secref" href="#scaling">§5</a>) is a dressed version of this one balance.</p>
+
+<p><strong>Where it sits in soft matter.</strong> $\ell_{eg}$ is the gravitational member of a family of elastic crossover lengths obtained by pitting bending stiffness $B$ against a competing energy density: the <em>elasto-capillary</em> length $(B/\gamma)^{1/2}$ (vs. surface tension $\gamma$), the <em>thermal/persistence</em> length $B/k_BT$ (vs. thermal energy, for filaments), and the <em>elasto-adhesive</em> length $(B/G_c)^{1/2}$ (vs. adhesion energy $G_c$). In each case the exponent is fixed by how the competing energy scales with the geometric size, exactly as in derivation (ii). Recognizing $\ell_{eg}$ as one of these tells you immediately that the ruck is governed by a competition, not by either effect alone.</p>
+
+<h2 id="shape">4. The shape of a shallow ruck</h2>
+
+<p>With the length scale $\ell_{eg}$ in hand, we solve the equilibrium equation (2.1) in the shallow-ruck limit $|\theta|\ll1$, where it becomes linear and exactly solvable. Use the horizontal coordinate $x\approx s$ and the deflection $y(x)$, with $\kappa\approx y''$; the lifted arc is then a beam carrying its own weight $-w$ (downward) under the horizontal thrust $H=-P$. Linearizing (2.1) about the flat state yields the classical beam-column equation</p>
+
+$$B\,y''''+P\,y''=-w,\qquad 0\lt x\lt \lambda,\tag{4.1}$$
+
+<p>with smooth-contact boundary conditions $y(0)=y(\lambda)=0$, $y'(0)=y'(\lambda)=0$ (A5).</p>
+
+<div class="prop"><b>Proposition 2 (buckled-blister shape).</b> In the bending-dominated limit (the particular solution $\propto w$ is negligible over a short ruck), the homogeneous problem has a nontrivial solution only for the quantized thrust
+$$P=\frac{4\pi^2 B}{\lambda^2},\tag{4.2}$$
+and the shape is the symmetric raised cosine
+$$\boxed{\,y(x)=\frac{h}{2}\Big(1-\cos\frac{2\pi x}{\lambda}\Big),\qquad 0\le x\le\lambda.\,}\tag{4.3}$$
+</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 440 185" width="100%" role="img" aria-label="Buckled raised-cosine shape with clamped ends and compressive thrust P">
+  <defs><marker id="P2b" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+  <marker id="P2d" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker></defs>
+  <line x1="30" y1="140" x2="410" y2="140" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+  <path d="M60,140 C100,140 110,50 220,50 C330,50 340,140 380,140" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <!-- clamped ends: y=0, y'=0 -->
+  <line x1="46" y1="140" x2="74" y2="140" stroke="#222" stroke-width="2.4"/>
+  <line x1="366" y1="140" x2="394" y2="140" stroke="#222" stroke-width="2.4"/>
+  <text x="36" y="156" font-size="10" fill="#222" font-style="italic">y=0, y′=0</text>
+  <text x="356" y="156" font-size="10" fill="#222" font-style="italic">y=0, y′=0</text>
+  <!-- thrust P inward -->
+  <line x1="20" y1="140" x2="44" y2="140" stroke="#1c5e8c" stroke-width="2.4" marker-end="url(#P2b)"/>
+  <line x1="420" y1="140" x2="396" y2="140" stroke="#1c5e8c" stroke-width="2.4" marker-end="url(#P2b)"/>
+  <text x="18" y="128" font-size="12" fill="#1c5e8c" font-style="italic">P</text>
+  <text x="410" y="128" font-size="12" fill="#1c5e8c" font-style="italic">P</text>
+  <!-- height h -->
+  <line x1="220" y1="50" x2="220" y2="140" stroke="#555" stroke-width="0.9" marker-start="url(#P2d)" marker-end="url(#P2d)"/>
+  <text x="226" y="98" font-size="12" fill="#555" font-style="italic">h</text>
+  <!-- span lambda -->
+  <line x1="60" y1="170" x2="380" y2="170" stroke="#555" stroke-width="0.9" marker-start="url(#P2d)" marker-end="url(#P2d)"/>
+  <text x="214" y="183" font-size="11" fill="#555" font-style="italic">x = 0 … λ</text>
+  <text x="250" y="40" font-size="11" fill="#7a1f1f" font-style="italic">y = (h/2)(1 − cos 2πx/λ)</text>
+</svg><figcaption><b>Setup.</b> The lifted arc as a beam-column on $[0,\lambda]$ with both ends clamped to the flat rug ($y=y'=0$). The homogeneous beam-column equation $By''''+Py''=0$ admits a non-trivial shape only at the quantised thrust $P=4\pi^2B/\lambda^2$ (mode $q\lambda=2\pi$), giving the raised cosine.</figcaption></figure>
+Set $w\to0$ in (4.1): $By''''+Py''=0$. With $q^2=P/B$ the characteristic roots are $k\in\{0,0,\pm iq\}$, so $y=a_0+a_1x+a_2\cos qx+a_3\sin qx$. Impose the four BCs. From $y(0)=0,\,y'(0)=0$: $a_0=-a_2$, $a_1=-qa_3$. Then $y(\lambda)=0$ and $y'(\lambda)=0$ give a $2\times2$ homogeneous system for $(a_2,a_3)$ whose determinant is $2(1-\cos q\lambda)-q\lambda\sin q\lambda=0$. The lowest symmetric root is $q\lambda=2\pi$, giving $P=Bq^2=4\pi^2B/\lambda^2$, $a_1=a_3=0$, and $y=a_2(\cos qx-1)$. Writing the crest height $h=y(\lambda/2)=-2a_2$ yields (4.3). <span class="qed">∎</span>
+</div>
+
+<div class="lem"><b>Lemma 1 (geometry of the small-slope ruck).</b> For the shape (4.3),
+$$\Delta=\int_0^\lambda\tfrac12 (y')^2\,dx=\frac{\pi^2 h^2}{4\lambda}
+\quad\Longleftrightarrow\quad h=\frac{2}{\pi}\sqrt{\Delta\lambda}.\tag{4.4}$$</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 430 175" width="100%" role="img" aria-label="Arc-length element ds vs base element dx, defining the excess length">
+  <!-- magnified element triangle -->
+  <line x1="70" y1="135" x2="300" y2="135" stroke="#555" stroke-width="1.6"/>
+  <line x1="300" y1="135" x2="300" y2="58" stroke="#1c5e8c" stroke-width="1.6"/>
+  <line x1="70" y1="135" x2="300" y2="58" stroke="#7a1f1f" stroke-width="2.6"/>
+  <!-- faint curve through the chord -->
+  <path d="M70,135 Q210,118 300,58" fill="none" stroke="#7a1f1f" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+  <text x="170" y="151" font-size="12" fill="#555" font-style="italic">dx</text>
+  <text x="306" y="100" font-size="12" fill="#1c5e8c" font-style="italic">dy</text>
+  <text x="150" y="86" font-size="12" fill="#7a1f1f" font-style="italic">ds</text>
+  <!-- theta -->
+  <path d="M104,135 A34,34 0 0 0 99,124" fill="none" stroke="#222" stroke-width="1.2"/>
+  <text x="108" y="128" font-size="11" fill="#222" font-style="italic">θ</text>
+  <circle cx="70" cy="135" r="2.6" fill="#222"/>
+  <!-- formulas -->
+  <text x="200" y="30" font-size="11" fill="#222" font-style="italic">ds = √(dx² + dy²) ≈ dx (1 + ½ y′²)</text>
+  <text x="200" y="50" font-size="11" fill="#d98c00" font-style="italic">excess = ds − dx ≈ ½ y′² dx</text>
+</svg><figcaption><b>Setup.</b> Each curve element $ds$ spans a shorter base $dx$; the surplus is $ds-dx\approx\tfrac12(y')^2\,dx$. Summing over the ruck gives the stored excess $\Delta=\int_0^\lambda\tfrac12(y')^2\,dx=\pi^2h^2/4\lambda$.</figcaption></figure>
+To leading order $1-\cos\theta\approx\tfrac12\theta^2\approx\tfrac12 (y')^2$, so $\Delta=\int_0^\lambda\tfrac12(y')^2dx$. With $y'=\frac{h}{2}\frac{2\pi}{\lambda}\sin\frac{2\pi x}{\lambda}$, $(y')^2=\frac{\pi^2h^2}{\lambda^2}\sin^2\frac{2\pi x}{\lambda}$, and $\int_0^\lambda\sin^2\frac{2\pi x}{\lambda}\,dx=\lambda/2$ (one full period). Hence $\Delta=\frac12\cdot\frac{\pi^2h^2}{\lambda^2}\cdot\frac\lambda2=\frac{\pi^2h^2}{4\lambda}$. <span class="qed">∎</span>
+</div>
+
+<p>The shape (4.3) is the same raised cosine that describes a buckled <em>delamination</em> "blister" — the bump a compressed thin coating makes when it peels away from its substrate; gravity has not yet entered, and $\lambda$ is still free. Gravity selects it.</p>
+
+<figure>
+<svg viewBox="0 0 520 150" width="100%" style="max-width:520px" role="img" aria-label="Ruck profile">
+  <line x1="20" y1="120" x2="500" y2="120" stroke="#999" stroke-width="1.5"/>
+  <path d="M20,120 L150,120 C190,120 190,40 260,40 C330,40 330,120 370,120 L500,120"
+        fill="none" stroke="#7a1f1f" stroke-width="2.5"/>
+  <line x1="150" y1="130" x2="370" y2="130" stroke="#555" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+  <text x="252" y="145" font-size="12" fill="#555" text-anchor="middle" font-style="italic">span λ  (contour L = λ + Δ)</text>
+  <line x1="262" y1="40" x2="262" y2="120" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="272" y="84" font-size="12" fill="#555" font-style="italic">h</text>
+  <text x="260" y="30" font-size="12" fill="#7a1f1f" text-anchor="middle">ruck (excess length Δ)</text>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,4 L8,2 L8,6 Z" fill="#555"/></marker></defs>
+</svg>
+<figcaption>The ruck: a localized loop of contour length $L=\lambda+\Delta$ over a horizontal span $\lambda$ (so the base $b=\lambda$), of height $h$, storing conserved excess length $\Delta$.</figcaption>
+</figure>
+
+<h3 id="onset">4.1 Nucleation onset: the critical thrust, and why it is subcritical</h3>
+
+<p><a class="secref" href="#origin">Section 0</a> invoked a threshold thrust $P_c$ at which the flat runner gives way to a ruck. We derive it by comparing the energy of the flat, compressed state to that of a single buckle that relieves the compression by gathering excess length $\Delta$. Using the shape energies of Lemma 2 and the geometry of Lemma 1, a buckle of length $\lambda$ and height $h$ changes the energy (per unit width) by
+$$\Delta E(h,\lambda)=\underbrace{\frac{\pi^4 B h^2}{\lambda^3}}_{\text{bending}}+\underbrace{\frac{w h\lambda}{2}}_{\text{gravity}}-\underbrace{P\cdot\frac{\pi^2 h^2}{4\lambda}}_{\text{compression relieved}},\tag{4.5}$$
+where the last term is the work $P\,\Delta$ released as the aprons draw together by the absorbed excess $\Delta=\pi^2h^2/4\lambda$.</p>
+
+<div class="thm"><b>Theorem 2½ (subcritical buckling onset).</b> Under gravity the flat state is linearly stable for <em>every</em> thrust $P$: an infinitesimal buckle always raises the energy. A ruck therefore appears only past a finite-amplitude barrier, whose limit of metastability (the spinodal of the flat state) occurs at
+$$\boxed{\;P_c=\kappa_0\,(B\,w^2)^{1/3}=\frac{\kappa_0\,B}{\ell_{eg}^2}\;}\qquad\text{with a critical nucleus }\;\lambda_c,\,h_c\sim\ell_{eg},$$
+$\kappa_0$ an order-one constant.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 430 200" width="100%" role="img" aria-label="Energy change versus buckle amplitude: metastable flat state, barrier, and lower rucked state">
+  <defs><marker id="T25k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker></defs>
+  <line x1="60" y1="185" x2="60" y2="25" stroke="#555" stroke-width="1.2" marker-end="url(#T25k)"/>
+  <line x1="60" y1="120" x2="410" y2="120" stroke="#555" stroke-width="1.2" marker-end="url(#T25k)"/>
+  <text x="40" y="22" font-size="11" fill="#555" font-style="italic">ΔE</text>
+  <text x="384" y="138" font-size="11" fill="#555" font-style="italic">h</text>
+  <text x="300" y="113" font-size="10" fill="#555" font-style="italic">amplitude</text>
+  <!-- landscape: rise to barrier then fall below zero -->
+  <path d="M60,120 C100,92 150,55 180,55 C238,55 300,120 372,176" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <circle cx="60" cy="120" r="3.4" fill="#1c5e8c"/>
+  <circle cx="180" cy="55" r="3.4" fill="#7a1f1f"/>
+  <text x="66" y="112" font-size="10" fill="#1c5e8c" font-style="italic">flat (metastable)</text>
+  <text x="150" y="44" font-size="10" fill="#7a1f1f" font-style="italic">barrier — needs a trigger</text>
+  <text x="300" y="190" font-size="10" fill="#7a1f1f" font-style="italic">rucked state (lower E)</text>
+  <text x="92" y="100" font-size="9.5" fill="#2a7d2a" font-style="italic">gravity +½whλ (∝h)</text>
+  <text x="250" y="150" font-size="9.5" fill="#1c5e8c" font-style="italic">relief −PΔ (∝h²)</text>
+</svg><figcaption><b>Setup.</b> The energy change (4.5) versus buckle amplitude $h$. For small $h$ the gravity penalty ($\propto h$) dominates the elastic terms ($\propto h^2$), so the flat state ($h=0$) is a local minimum — linearly stable for every $P$. A ruck appears only over a finite barrier; the barrier collapses (spinodal) at $P_c\sim(Bw^2)^{1/3}$ with nucleus $\sim\ell_{eg}$. Hence nucleation is subcritical and trigger-driven.</figcaption></figure>
+<em>Linear stability.</em> For small $h$ the two elastic terms in (4.5) are $O(h^2)$ while the gravity term is $O(h)$; hence $\Delta E=\tfrac12 wh\lambda+O(h^2)\gt 0$ for any fixed $\lambda$ and any $P$. An infinitesimal perturbation costs energy, so the flat state is <em>metastable</em> (a local energy minimum) and linearly stable for all $P$ — the <em>bifurcation</em> (the qualitative change of equilibrium as $P$ grows) cannot be <em>supercritical</em> (a smooth onset growing continuously from zero amplitude). Gravity (the linear-in-$h$ penalty of lifting mass) is what suppresses the classical zero-gravity buckling instability.<br>
+<em>Spinodal scale.</em> A lower-energy rucked state first becomes accessible where the flat well and the saddle merge: $\Delta E=0$ together with $\partial_h\Delta E=\partial_\lambda\Delta E=0$. Rather than carry the $O(1)$ algebra, balance the three terms of (4.5) pairwise. Bending vs. relief, $\pi^4Bh^2/\lambda^3\sim P\pi^2h^2/4\lambda$, gives $P\sim B/\lambda^2$. Gravity vs. bending, $wh\lambda\sim Bh^2/\lambda^3$, gives $h\sim w\lambda^4/B$. Self-consistency of a compact nucleus, $h\sim\lambda$, then forces $\lambda^3\sim B/w$, i.e. $\lambda_c\sim\ell_{eg}$, whence $P_c\sim B/\ell_{eg}^2=(Bw^2)^{1/3}$. <span class="qed">∎</span>
+</div>
+
+<p>Two consequences worth stating plainly. First, <em>a ruck needs a trigger</em> — a footstep, a kick, a shove — because nothing grows from noise; this is exactly the <em>subcritical</em> character of the transition (the rucked state appears abruptly at a finite amplitude, set off from the flat state by an energy barrier, rather than growing continuously from zero). Second, the critical nucleus is of size $\ell_{eg}$, so the object that appears is already a fully-formed localized loop rather than a shallow spread-out wrinkle — the reason rucks are discrete and well-separated rather than a periodic ripple train (cf. <a class="secref" href="#regimes">§6</a> and the open problems).</p>
+
+<h3 id="ratchet">4.2 The walking ratchet: how footfalls pump the sheet toward $P_c$</h3>
+
+<p><a class="secref" href="#walk">Section 0.1</a> asserted that walking <em>pumps</em> excess length into the runner. The mechanism is a load-modulated frictional ratchet, which we now make quantitative at the reduced-model level. Contact with the floor is unilateral and frictional: a patch of runner slips only where the local shear stress exceeds $\mu_s\,p_n$, with $\mu_s$ the static friction coefficient and $p_n$ the normal pressure. Under the runner's own weight $p_n$ is tiny; a planted foot adds a large local $p_n$.</p>
+
+<p>Resolve one stride into two phases.</p>
+<ul>
+<li><b>Push-off (loaded).</b> The foot presses down — pinning the patch beneath it at high $\mu_s p_n$ — and simultaneously shears rearward. The shear is transmitted into the lightly-loaded rug <em>ahead</em>, which slips forward-relative-to-floor (i.e. the material is shoved back under the foot) by an amount $\delta_+$ set by its low friction threshold.</li>
+<li><b>Recovery (unloaded).</b> The foot lifts; its normal load vanishes, so the previously pinned patch is now low-friction. The elastic restoring shear tries to undo the slip, but with friction now symmetric and small the recovered slip $\delta_-$ is incomplete.</li>
+</ul>
+
+<p>Because friction is <em>high while shoving and low while recovering</em>, the cycle is rectified: a net residual slip
+$$\delta_{\rm net}=\delta_+-\delta_-\gt 0$$
+of material is ratcheted rearward each step — precisely the directed transport of a frictional ratchet (the same physics that walks a vibrated object across a table). Each step injects excess length $\delta\Delta\approx\delta_{\rm net}$ and nudges the local thrust upward. Starting from the flat state, the number of steps to reach the critical nucleus $\Delta_c\sim\ell_{eg}$ of <a class="secref" href="#onset">§4.1</a> is
+$$N_c\;\approx\;\frac{\Delta_c}{\delta_{\rm net}}\;\sim\;\frac{\ell_{eg}}{\delta_{\rm net}}.$$
+With $\ell_{eg}\sim8\ \mathrm{cm}$ (the worked example of <a class="secref" href="#example">§11</a>) and a per-step residual $\delta_{\rm net}\sim0.1$–$1\ \mathrm{mm}$, this gives $N_c\sim10^2$–$10^3$ steps — consistent with rucks emerging only after sustained foot traffic on a runner.</p>
+
+<figure>
+<svg viewBox="0 0 470 210" width="100%" style="max-width:460px" role="img" aria-label="Animation of the walking ratchet: push-off drags the rug patch rearward, recovery springs it back less, leaving a net creep">
+  <defs>
+    <marker id="ratR" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c0392b"/></marker>
+    <marker id="ratB" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+    <marker id="ratG" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker>
+    <marker id="ratGs" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#555"/></marker>
+  </defs>
+  <!-- walking direction -->
+  <text x="356" y="22" font-size="10.5" fill="#1c5e8c" font-style="italic">walking</text>
+  <line x1="356" y1="30" x2="412" y2="30" stroke="#1c5e8c" stroke-width="2" marker-end="url(#ratB)"/>
+  <!-- floor + fixed ground ticks -->
+  <rect x="30" y="150" width="412" height="12" rx="2" fill="#ecdfc4" stroke="#d9c79a" stroke-width="0.6"/>
+  <line x1="20" y1="162" x2="452" y2="162" stroke="#999" stroke-width="1.4"/>
+  <g stroke="#cfcfcf" stroke-width="1">
+    <line x1="60" y1="162" x2="60" y2="170"/><line x1="110" y1="162" x2="110" y2="170"/>
+    <line x1="160" y1="162" x2="160" y2="170"/><line x1="210" y1="162" x2="210" y2="170"/>
+    <line x1="300" y1="162" x2="300" y2="170"/><line x1="350" y1="162" x2="350" y2="170"/>
+    <line x1="400" y1="162" x2="400" y2="170"/>
+  </g>
+  <text x="24" y="182" font-size="9.5" fill="#999" font-style="italic">floor (fixed ground ticks)</text>
+  <!-- fixed start line for the patch -->
+  <line x1="250" y1="126" x2="250" y2="172" stroke="#888" stroke-width="0.9" stroke-dasharray="3,3"/>
+  <text x="232" y="123" font-size="9" fill="#888" font-style="italic">step start</text>
+  <!-- phase labels (toggle) -->
+  <text x="28" y="20" font-size="11" fill="#c0392b" font-weight="bold">PUSH-OFF — foot DOWN, friction HIGH
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.4;0.42;1" dur="5s" repeatCount="indefinite"/></text>
+  <text x="28" y="20" font-size="11" fill="#1c5e8c" font-weight="bold">RECOVERY — foot UP, friction LOW
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.4;0.42;0.8;0.82;1" dur="5s" repeatCount="indefinite"/></text>
+  <!-- tracked rug patch -->
+  <g>
+    <rect x="232" y="149" width="36" height="13" fill="#7a1f1f" fill-opacity="0.55"/>
+    <line x1="250" y1="149" x2="250" y2="162" stroke="#4a0f0f" stroke-width="1"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 0; -55 0; -55 0; -30 0; -30 0" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+  </g>
+  <!-- foot (drawn in the down pose; offset lifts it) -->
+  <g>
+    <rect x="218" y="133" width="64" height="11" rx="5" fill="#444"/>
+    <rect x="243" y="114" width="11" height="20" rx="2" fill="#444"/>
+    <g>
+      <line x1="250" y1="128" x2="210" y2="128" stroke="#c0392b" stroke-width="2" marker-end="url(#ratR)"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.2;0.22;0.4;0.42;1" dur="5s" repeatCount="indefinite"/>
+    </g>
+    <animateTransform attributeName="transform" type="translate" values="0 -30; 0 0; -55 0; -55 -30; 0 -30; 0 -30" keyTimes="0;0.2;0.4;0.6;0.8;1" dur="5s" repeatCount="indefinite"/>
+  </g>
+  <!-- net creep bracket (appears at hold) -->
+  <g>
+    <line x1="220" y1="178" x2="250" y2="178" stroke="#555" stroke-width="1" marker-start="url(#ratGs)" marker-end="url(#ratG)"/>
+    <text x="206" y="192" font-size="10" fill="#555" font-style="italic">δ_net (net creep / step)</text>
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.8;0.82;1" dur="5s" repeatCount="indefinite"/>
+  </g>
+</svg>
+<figcaption><b>One stride, looped.</b> <em>Push-off</em> (foot down, friction high): the foot pins the rug patch and shears rearward, dragging it back by $\delta_+$ — the patch slips relative to the fixed floor (grey ticks). <em>Recovery</em> (foot up, friction low): the sheet springs back elastically, but recovers only $\delta_-\lt\delta_+$. The patch is left short of the dashed start line by $\delta_{\rm net}=\delta_+-\delta_-$. That residual repeats every step, pumping excess length into the runner until it buckles into a ruck. <span class="small">(Animation is pure SVG; if your viewer shows it static, it still reads as the start/end of one cycle.)</span></figcaption>
+</figure>
+
+<p class="small">$\delta_{\rm net}$ is gait-, weight-, and finish-dependent (a slick floor or a backing that grips changes it by orders of magnitude); it is the empirical knob of this reduced model, not a constant to be derived from $B$ and $w$ alone. The robust prediction is the <em>scaling</em> $N_c\sim\ell_{eg}/\delta_{\rm net}$ and the rectification mechanism, not a universal step count.</p>
+
+<h2 id="scaling">5. Selecting the ruck's height and length</h2>
+
+<p>At fixed excess length $\Delta$, the runner picks the $\lambda$ that minimizes total energy. Evaluate both energies on the exact shape (4.3).</p>
+
+<div class="lem"><b>Lemma 2 (energies on the cosine profile).</b>
+$$U_b=\frac B2\int_0^\lambda (y'')^2dx=\frac{\pi^4 B\,h^2}{\lambda^3},
+\qquad
+U_g=w\int_0^\lambda y\,dx=\frac{w\,h\,\lambda}{2}.\tag{5.1}$$</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 160" width="100%" role="img" aria-label="Cosine ruck profile: shaded area gives gravity energy, crest curvature gives bending energy">
+  <path d="M60,130 C100,130 110,50 215,50 C320,50 330,130 380,130 Z" fill="#d98c00" fill-opacity="0.16" stroke="none"/>
+  <line x1="40" y1="130" x2="400" y2="130" stroke="#ccc" stroke-width="1"/>
+  <path d="M60,130 C100,130 110,50 215,50 C320,50 330,130 380,130" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <text x="150" y="100" font-size="11" fill="#9a6b12" font-style="italic">area = ∫y dx</text>
+  <text x="120" y="118" font-size="10" fill="#9a6b12" font-style="italic">U_g = w·∫y dx = whλ/2</text>
+  <circle cx="215" cy="50" r="3" fill="#1c5e8c"/>
+  <text x="222" y="44" font-size="10.5" fill="#1c5e8c" font-style="italic">curvature y″ here</text>
+  <text x="222" y="58" font-size="10.5" fill="#1c5e8c" font-style="italic">U_b = (B/2)∫y″² = π⁴Bh²/λ³</text>
+</svg><figcaption><b>Setup.</b> On the cosine profile, gravitational energy $U_g$ is set by the shaded area $\int y\,dx$, while bending energy $U_b$ is set by the squared curvature $\int (y'')^2$ (largest at crest and troughs). Both integrals are elementary, yielding (5.1).</figcaption></figure>
+$y''=\frac h2\big(\frac{2\pi}{\lambda}\big)^2\cos\frac{2\pi x}{\lambda}$, so $(y'')^2=\frac{h^2}{4}\frac{16\pi^4}{\lambda^4}\cos^2\frac{2\pi x}{\lambda}$, and $\int_0^\lambda\cos^2\frac{2\pi x}{\lambda}\,dx=\lambda/2$. Then $U_b=\frac B2\cdot\frac{h^2}{4}\frac{16\pi^4}{\lambda^4}\cdot\frac\lambda2=\frac{\pi^4 Bh^2}{\lambda^3}$. For gravity, $\int_0^\lambda y\,dx=\frac h2\int_0^\lambda(1-\cos\frac{2\pi x}{\lambda})dx=\frac h2\lambda$, giving $U_g=\frac{wh\lambda}2$. <span class="qed">∎</span>
+</div>
+
+<p>Eliminate $h$ via the constraint (4.4), $h^2=\tfrac{4}{\pi^2}\Delta\lambda$:</p>
+
+$$U(\lambda)=\underbrace{\frac{4\pi^2 B\,\Delta}{\lambda^2}}_{\text{bending}}+\underbrace{\frac{w\,\Delta^{1/2}}{\pi}\,\lambda^{3/2}}_{\text{gravity}}.\tag{5.2}$$
+
+<div class="thm"><b>Theorem 2 (ruck length and height scalings).</b> The energy (5.2) is strictly convex on $\lambda\gt 0$ and has a unique minimizer
+$$\boxed{\;\lambda_\star=\Big(\tfrac{16\pi^3}{3}\Big)^{2/7}\,\ell_{eg}^{\,6/7}\,\Delta^{1/7}\;}\qquad
+\boxed{\;h_\star=\tfrac{2}{\pi}\Big(\tfrac{16\pi^3}{3}\Big)^{1/7}\,\ell_{eg}^{\,3/7}\,\Delta^{4/7}\;}\tag{5.3}$$
+so that, dropping order-one constants, $\lambda_\star\sim\ell_{eg}(\Delta/\ell_{eg})^{1/7}$ and $h_\star\sim\ell_{eg}(\Delta/\ell_{eg})^{4/7}$.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 200" width="100%" role="img" aria-label="Total energy versus ruck length: bending term decreasing, gravity term increasing, sum with a unique minimum">
+  <defs><marker id="T2k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker></defs>
+  <line x1="55" y1="185" x2="55" y2="20" stroke="#555" stroke-width="1.2" marker-end="url(#T2k)"/>
+  <line x1="55" y1="170" x2="405" y2="170" stroke="#555" stroke-width="1.2" marker-end="url(#T2k)"/>
+  <text x="34" y="18" font-size="11" fill="#555" font-style="italic">U</text>
+  <text x="392" y="187" font-size="12" fill="#555" font-style="italic">λ</text>
+  <!-- bending ~ 1/lambda^2 (decreasing) -->
+  <path d="M70,38 C110,110 170,150 400,166" fill="none" stroke="#1c5e8c" stroke-width="1.8" stroke-dasharray="5,3"/>
+  <text x="120" y="60" font-size="10" fill="#1c5e8c" font-style="italic">bending ∝ λ⁻²</text>
+  <!-- gravity ~ lambda^{3/2} (increasing) -->
+  <path d="M70,168 C180,160 300,110 392,34" fill="none" stroke="#2a7d2a" stroke-width="1.8" stroke-dasharray="5,3"/>
+  <text x="300" y="60" font-size="10" fill="#2a7d2a" font-style="italic">gravity ∝ λ³ᐟ²</text>
+  <!-- sum: convex with minimum -->
+  <path d="M72,52 C150,120 200,128 232,127 C300,124 360,96 396,58" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <circle cx="232" cy="127" r="3.6" fill="#7a1f1f"/>
+  <line x1="232" y1="127" x2="232" y2="170" stroke="#7a1f1f" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="216" y="184" font-size="11" fill="#7a1f1f" font-style="italic">λ★</text>
+  <text x="250" y="120" font-size="10.5" fill="#7a1f1f" font-style="italic">U = U_b + U_g (convex)</text>
+</svg><figcaption><b>Setup.</b> At fixed excess $\Delta$, bending energy falls as the ruck spreads ($\propto\lambda^{-2}$) while gravity rises ($\propto\lambda^{3/2}$). Their sum is strictly convex with a unique minimiser $\lambda_\star$ — the selected ruck length (5.3).</figcaption></figure>
+$U'(\lambda)=-\dfrac{8\pi^2B\Delta}{\lambda^3}+\dfrac{3}{2}\dfrac{w\Delta^{1/2}}{\pi}\lambda^{1/2}$. Setting $U'=0$:
+$$\frac{3w\Delta^{1/2}}{2\pi}\lambda^{1/2}=\frac{8\pi^2B\Delta}{\lambda^3}
+\;\Longrightarrow\;
+\lambda^{7/2}=\frac{16\pi^3}{3}\frac{B}{w}\Delta^{1/2}
+\;\Longrightarrow\;
+\lambda_\star=\Big(\tfrac{16\pi^3}{3}\Big)^{2/7}\Big(\tfrac Bw\Big)^{2/7}\Delta^{1/7},$$
+which is the boxed result after $(B/w)^{2/7}=\ell_{eg}^{6/7}$. Convexity: $U''(\lambda)=\dfrac{24\pi^2B\Delta}{\lambda^4}+\dfrac{3w\Delta^{1/2}}{4\pi}\lambda^{-1/2}\gt 0$ for all $\lambda\gt 0$, so the critical point is the unique global minimum. Substituting $\lambda_\star$ into $h=\frac2\pi\sqrt{\Delta\lambda}$ gives $h_\star\propto\Delta^{1/2}\lambda_\star^{1/2}\propto\Delta^{1/2}\Delta^{1/14}=\Delta^{4/7}$ with the stated constant. <span class="qed">∎</span>
+</div>
+
+<p>The non-obvious $1/7$ and $4/7$ exponents are the signature of the bending–gravity competition; they are robust (only prefactors change) under the small-slope and single-mode assumptions. At the minimum, equipartition holds up to a rational factor: $U_b/U_g=\tfrac34$, as one verifies by inserting $\lambda_\star$ into (5.2).</p>
+
+<h2 id="regimes">6. Two asymptotic regimes</h2>
+
+<table>
+<tr><th></th><th>Small ruck $\Delta\ll\ell_{eg}$</th><th>Large ruck $\Delta\gg\ell_{eg}$</th></tr>
+<tr><td>dominant balance</td><td>bending vs. compression (Euler loop)</td><td>bending vs. gravity</td></tr>
+<tr><td>shape set by</td><td>elastica/pendulum (<a class="secref" href="#pendulum">§A2</a>), gravity a perturbation</td><td>heavy elastica (<a class="secref" href="#firstint">§A1</a>); top droops/overhangs</td></tr>
+<tr><td>slope</td><td>$\theta=O(\Delta/\lambda)\ll1$ — linear theory exact</td><td>$\theta=O(1)$ — fully nonlinear; an overhanging loop</td></tr>
+<tr><td>height/length</td><td colspan="2">both interpolate through $\lambda_\star,h_\star$ of (5.3) at the crossover $\Delta\sim\ell_{eg}$</td></tr>
+</table>
+
+<p>The small-slope theory of <a class="secref" href="#shape">§4–5</a> is internally exact for $\Delta\ll\ell_{eg}$; for $\Delta\gtrsim\ell_{eg}$ the cosine profile is replaced by the elliptic-function loop of the Appendix, and the boxed prefactors in (5.3) acquire $O(1)$ corrections while the exponents persist.</p>
+
+<h2 id="kinematics">7. Kinematics — the ruck rolls like a wheel</h2>
+
+<p>Now let the ruck propagate at constant speed $c$ without change of shape (a travelling wave). Pass to the co-moving frame $\xi=x-ct$. The contact points advance at $c$. <strong>Rolling without slip</strong> (A3, now with the contact line as an instantaneous pivot) means the material at the contact is momentarily at rest in the lab. Inextensibility then forces every material point on the arc to move at the same tangential speed $c$ in the co-moving frame, directed along $-\hat t$, where $\hat t=(\cos\theta,\sin\theta)$.</p>
+
+<div class="thm"><b>Theorem 3 (cycloidal velocity field).</b> A material point of the ruck at tangent angle $\theta$ has lab-frame velocity
+$$\mathbf v_{\rm lab}=c\,(1-\cos\theta,\,-\sin\theta),\qquad
+\boxed{\;|\mathbf v_{\rm lab}|=2c\,\bigl|\sin(\theta/2)\bigr|\;}\tag{7.1}$$
+Consequently the contact material ($\theta=0$) is at rest and the crest material can reach $2c$ — exactly the velocity field of a point on a wheel rolling at speed $c$.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 185" width="100%" role="img" aria-label="Galilean velocity addition at a material point: frame velocity plus material flow give the lab velocity">
+  <defs>
+    <marker id="T3k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222"/></marker>
+    <marker id="T3b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+    <marker id="T3g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="T3r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+  </defs>
+  <!-- faint arc through P -->
+  <path d="M60,150 Q150,80 250,70" fill="none" stroke="#7a1f1f" stroke-width="1.4" stroke-dasharray="4,3" opacity="0.6"/>
+  <circle cx="150" cy="100" r="3.2" fill="#222"/>
+  <!-- tangent t-hat + theta -->
+  <line x1="150" y1="100" x2="195" y2="46" stroke="#222" stroke-width="1.5" marker-end="url(#T3k)"/>
+  <text x="198" y="44" font-size="11" fill="#222" font-style="italic">t̂</text>
+  <line x1="150" y1="100" x2="214" y2="100" stroke="#222" stroke-width="0.8" stroke-dasharray="4,3"/>
+  <path d="M196,100 A46,46 0 0 0 181,72" fill="none" stroke="#222" stroke-width="1.1"/>
+  <text x="196" y="92" font-size="11" fill="#222" font-style="italic">θ</text>
+  <!-- frame velocity c xhat -->
+  <line x1="150" y1="100" x2="220" y2="100" stroke="#1c5e8c" stroke-width="2" marker-end="url(#T3b)"/>
+  <text x="196" y="116" font-size="10.5" fill="#1c5e8c" font-style="italic">c x̂ (frame)</text>
+  <!-- material flow -c that -->
+  <line x1="150" y1="100" x2="105" y2="154" stroke="#2a7d2a" stroke-width="2" marker-end="url(#T3g)"/>
+  <text x="40" y="150" font-size="10.5" fill="#2a7d2a" font-style="italic">−c t̂ (flow)</text>
+  <!-- resultant v_lab -->
+  <line x1="150" y1="100" x2="175" y2="153.6" stroke="#7a1f1f" stroke-width="2.4" marker-end="url(#T3r)"/>
+  <line x1="220" y1="100" x2="175" y2="153.6" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <line x1="105" y1="154" x2="175" y2="153.6" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <text x="180" y="150" font-size="10.5" fill="#7a1f1f" font-style="italic">v_lab</text>
+  <text x="250" y="44" font-size="11.5" fill="#7a1f1f" font-style="italic">|v_lab| = 2c sin(θ/2)</text>
+  <text x="250" y="62" font-size="10" fill="#555" font-style="italic">0 at contact, 2c at crest</text>
+</svg><figcaption><b>Setup.</b> A material point moves backward along the sheet at speed $c$ in the co-moving frame ($-c\hat t$) while the frame advances at $c\hat x$. Their vector sum is the lab velocity $\mathbf v_{\rm lab}=c(\hat x-\hat t)$, with magnitude $2c\sin(\theta/2)$ — the cycloid kinematics of a rolling wheel.</figcaption></figure>
+Galilean addition (velocities simply add between two frames in relative motion): $\mathbf v_{\rm lab}=\mathbf v_{\rm comoving}+c\,\hat x = -c\,\hat t+c\,\hat x = c(\hat x-\hat t)=c(1-\cos\theta,-\sin\theta)$. Its magnitude squared is $c^2[(1-\cos\theta)^2+\sin^2\theta]=c^2[2-2\cos\theta]=4c^2\sin^2(\theta/2)$, by the half-angle identity. Taking the square root gives (7.1). For $\theta=0$, $|\mathbf v|=0$ (no slip); a rolling wheel of radius $R$ at angular position $\theta$ has rim speed $2c\sin(\theta/2)$ identically. <span class="qed">∎</span>
+</div>
+
+<p>The ruck is therefore not a sliding bump but a <em>rolling</em> one: material is laid down at the rear, carried over the top at up to twice the propagation speed, and picked up at the front — the caterpillar-tread / tank-tread kinematics. This single result determines the dynamics.</p>
+
+<h2 id="effmass">8. Dynamics I — the effective-mass theorem</h2>
+
+<div class="thm"><b>Theorem 4 (kinetic energy and effective mass).</b> The kinetic energy of a shape-preserving ruck propagating at speed $c$ is, independent of its detailed shape,
+$$\boxed{\;K=\tfrac12 M_{\rm eff}\,c^2\quad\text{with}\quad M_{\rm eff}=2m\Delta,\qquad K=m\,c^2\,\Delta.\;}\tag{8.1}$$
+Equivalently, the ruck is dynamically a rigid hoop of mass $m\Delta$ (mass of the excess material) rolling at speed $c$.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 195" width="100%" role="img" aria-label="The ruck as a rolling hoop: rim velocities zero at contact and 2c at the crest">
+  <defs>
+    <marker id="T4r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+    <marker id="T4k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222"/></marker>
+  </defs>
+  <line x1="20" y1="167" x2="300" y2="167" stroke="#999" stroke-width="1.4"/>
+  <circle cx="140" cy="112" r="55" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <!-- centre velocity c -->
+  <circle cx="140" cy="112" r="3" fill="#222"/>
+  <line x1="140" y1="112" x2="178" y2="112" stroke="#222" stroke-width="1.8" marker-end="url(#T4k)"/>
+  <text x="150" y="106" font-size="10.5" fill="#222" font-style="italic">c</text>
+  <!-- contact: v=0 -->
+  <circle cx="140" cy="167" r="3.4" fill="#1c5e8c"/>
+  <text x="148" y="181" font-size="10.5" fill="#1c5e8c" font-style="italic">v = 0 (no slip)</text>
+  <!-- top: 2c -->
+  <line x1="140" y1="57" x2="216" y2="57" stroke="#7a1f1f" stroke-width="2.4" marker-end="url(#T4r)"/>
+  <text x="150" y="50" font-size="11" fill="#7a1f1f" font-style="italic">2c (crest)</text>
+  <!-- 3 o'clock up, 9 o'clock down -->
+  <line x1="195" y1="112" x2="195" y2="74" stroke="#7a1f1f" stroke-width="2" marker-end="url(#T4r)"/>
+  <line x1="85" y1="112" x2="85" y2="150" stroke="#7a1f1f" stroke-width="2" marker-end="url(#T4r)"/>
+  <text x="40" y="100" font-size="9.5" fill="#555" font-style="italic">√2 c</text>
+  <!-- right text block -->
+  <text x="250" y="70" font-size="11" fill="#222" font-style="italic">ruck ≡ hoop, mass mΔ</text>
+  <text x="250" y="92" font-size="10.5" fill="#555" font-style="italic">∫(1−cosθ) ds = Δ</text>
+  <text x="250" y="114" font-size="11" fill="#7a1f1f" font-style="italic">K = m Δ c²</text>
+  <text x="250" y="134" font-size="11" fill="#7a1f1f" font-style="italic">M_eff = 2 m Δ</text>
+</svg><figcaption><b>Setup.</b> Rolling without slip, the rim speed is $2c\sin(\theta/2)$ — zero at the contact, $2c$ at the crest (Theorem 3). Integrating $\tfrac12 m|\mathbf v|^2$ over the arc and using $\int(1-\cos\theta)\,ds=\Delta$ gives $K=m\Delta c^2$, i.e. a hoop of mass $m\Delta$ and effective mass $M_{\rm eff}=2m\Delta$.</figcaption></figure>
+$$K=\tfrac12 m\int_0^L|\mathbf v_{\rm lab}|^2\,ds=\tfrac12 m\int_0^L 4c^2\sin^2(\theta/2)\,ds=2mc^2\int_0^L\sin^2(\theta/2)\,ds=mc^2\!\int_0^L(1-\cos\theta)\,ds.$$
+By Definition 1, $\int_0^L(1-\cos\theta)\,ds=\Delta$. Hence $K=mc^2\Delta=\tfrac12(2m\Delta)c^2$. A hoop of mass $M_h=m\Delta$ and radius $R$ rolling at $c$ (moment of inertia $I=M_hR^2$, angular speed $\omega=c/R$) has $K=\tfrac12 M_h c^2+\tfrac12 I\omega^2=\tfrac12M_hc^2+\tfrac12M_hc^2=M_hc^2=m\Delta c^2$, identical. <span class="qed">∎</span>
+</div>
+
+<p>This is the central dynamical fact: the inertia that resists pushing the ruck is <em>not</em> the runner's total mass, but only twice the mass of the gathered excess. Pushing a ruck is cheap precisely because $M_{\rm eff}=2m\Delta$ is tiny.</p>
+
+<h2 id="incline">9. Dynamics II — propagation, acceleration, and driven motion</h2>
+
+<p>Tilt the floor by angle $\alpha$. Two facts combine: (i) the static ruck is set by the normal weight component, so $g\to g\cos\alpha$ in $\ell_{eg}$; (ii) the tangential component drives propagation.</p>
+
+<div class="lem"><b>Lemma 3 (driving force).</b> Advancing the ruck a distance $\ell$ down-slope transports the excess mass $m\Delta$ down-slope by $\ell$, lowering gravitational energy by $\Delta U_{\rm drive}=-m\Delta\,g\sin\alpha\,\ell$; hence the driving force is $F=m\Delta\,g\sin\alpha$.</div>
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 175" width="100%" role="img" aria-label="Advancing the ruck transports the excess mass down-slope, lowering gravitational energy">
+  <defs>
+    <marker id="L3k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222"/></marker>
+    <marker id="L3g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+  </defs>
+  <line x1="40" y1="50" x2="390" y2="160" stroke="#999" stroke-width="1.6"/>
+  <line x1="40" y1="50" x2="130" y2="50" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+  <path d="M52,56 A30,30 0 0 1 78,67" fill="none" stroke="#222" stroke-width="1.1"/>
+  <text x="80" y="62" font-size="11" fill="#222" font-style="italic">α</text>
+  <!-- excess mass slug -->
+  <rect x="188" y="92" width="26" height="16" rx="2" fill="#7a1f1f" fill-opacity="0.22" stroke="#7a1f1f" stroke-width="1.2"/>
+  <text x="170" y="88" font-size="11" fill="#7a1f1f" font-style="italic">mΔ</text>
+  <!-- advance ell down-slope -->
+  <line x1="208" y1="106" x2="290" y2="132" stroke="#222" stroke-width="1.6" marker-end="url(#L3k)"/>
+  <text x="240" y="126" font-size="11" fill="#222" font-style="italic">ℓ</text>
+  <!-- height drop ell sin alpha -->
+  <line x1="208" y1="106" x2="290" y2="106" stroke="#888" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <line x1="290" y1="106" x2="290" y2="132" stroke="#555" stroke-width="0.9" marker-end="url(#L3k)"/>
+  <text x="296" y="124" font-size="10.5" fill="#555" font-style="italic">ℓ sinα</text>
+  <!-- weight -->
+  <line x1="201" y1="108" x2="201" y2="146" stroke="#2a7d2a" stroke-width="1.6" marker-end="url(#L3g)"/>
+  <text x="206" y="146" font-size="10.5" fill="#2a7d2a" font-style="italic">mΔ g</text>
+  <text x="250" y="46" font-size="10.5" fill="#222" font-style="italic">ΔU = − mΔ g (ℓ sinα)</text>
+  <text x="250" y="62" font-size="10.5" fill="#222" font-style="italic">F = −∂U/∂ℓ = mΔ g sinα</text>
+</svg><figcaption><b>Setup.</b> Advancing the ruck by $\ell$ is equivalent to relocating a slug of excess mass $m\Delta$ down-slope by $\ell$ (dropping it by $\ell\sin\alpha$). The energy released, $-m\Delta\,g\sin\alpha\,\ell$, gives the constant driving force $F=m\Delta\,g\sin\alpha$.</figcaption></figure>
+Far ahead and behind, the runner is flat and stress-free; the only difference between "ruck has passed" and "ruck has not" over a swept length $\ell$ is a rigid down-slope displacement of the runner by the Burgers vector $\Delta$ (see <a class="secref" href="#dislocation">§10</a>). Net effect of advancing by $\ell$: a slug of material of mass $m\Delta$ is relocated down-slope by $\ell$, so $\Delta U=-(m\Delta)g\sin\alpha\,\ell$ and $F=-\partial_\ell U=m\Delta g\sin\alpha$. <span class="qed">∎</span>
+</div>
+
+<div class="thm"><b>Theorem 5 (a rolling ruck accelerates at $\tfrac12 g\sin\alpha$).</b> In the conservative (frictionless, non-dissipative) limit,
+$$\boxed{\;a=\frac{F}{M_{\rm eff}}=\frac{m\Delta g\sin\alpha}{2m\Delta}=\frac12\,g\sin\alpha\;}\tag{9.1}$$
+independent of $\Delta$, $B$, and $m$ — the same acceleration as a rigid hoop rolling without slip. Equivalently $c^2=g\sin\alpha\,\ell$ after travelling $\ell$ from rest.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 420 175" width="100%" role="img" aria-label="A ruck rolls down an incline like a hoop, accelerating at half g sine alpha">
+  <defs>
+    <marker id="T5g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="T5r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+  </defs>
+  <line x1="40" y1="48" x2="380" y2="158" stroke="#999" stroke-width="1.6"/>
+  <line x1="40" y1="48" x2="130" y2="48" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+  <path d="M52,54 A30,30 0 0 1 78,65" fill="none" stroke="#222" stroke-width="1.1"/>
+  <text x="80" y="60" font-size="11" fill="#222" font-style="italic">α</text>
+  <!-- hoop on incline -->
+  <circle cx="190" cy="74" r="30" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <circle cx="190" cy="74" r="2.4" fill="#222"/>
+  <text x="150" y="58" font-size="10.5" fill="#7a1f1f" font-style="italic">ruck ≡ hoop, mΔ</text>
+  <!-- weight mDeltaG -->
+  <line x1="190" y1="74" x2="190" y2="124" stroke="#2a7d2a" stroke-width="1.6" marker-end="url(#T5g)"/>
+  <text x="194" y="120" font-size="10" fill="#2a7d2a" font-style="italic">mΔ g</text>
+  <!-- component along incline (down-slope) -->
+  <line x1="190" y1="74" x2="226" y2="85.4" stroke="#7a1f1f" stroke-width="2" marker-end="url(#T5r)"/>
+  <text x="206" y="104" font-size="10" fill="#7a1f1f" font-style="italic">mΔ g sinα</text>
+  <text x="250" y="118" font-size="11" fill="#222" font-style="italic">a = F / M_eff</text>
+  <text x="250" y="138" font-size="11.5" fill="#7a1f1f" font-style="italic">= mΔg sinα / 2mΔ = ½ g sinα</text>
+</svg><figcaption><b>Setup.</b> On an incline the drive is $F=m\Delta g\sin\alpha$ (Lemma 3) and the inertia is $M_{\rm eff}=2m\Delta$ (Theorem 4). Their ratio gives a $\Delta$-independent acceleration $a=\tfrac12 g\sin\alpha$ — identical to a rigid hoop rolling without slip.</figcaption></figure>
+Newton on the effective body: $M_{\rm eff}\,\dot c=F$ gives (9.1). Energy check: $K=m\Delta c^2$ (Thm 4) equals work done $F\ell=m\Delta g\sin\alpha\,\ell$, so $c^2=g\sin\alpha\,\ell$; differentiating, $2c\,\dot c=g\sin\alpha\,\dot\ell=g\sin\alpha\,c$, i.e. $\dot c=a=\tfrac12 g\sin\alpha$, consistent. The hoop value $a=\tfrac12 g\sin\alpha$ follows from $I=M_hR^2$, confirming the equivalence of Theorem 4. <span class="qed">∎</span>
+</div>
+
+<p><strong>With dissipation.</strong> Real propagation loses energy at the moving contact line (visco-plastic peeling/laydown, friction on the apron, internal hysteresis). Modelling the loss per unit advance as a constant resistive force $F_d=\gamma$ (a "Peierls-like" threshold) plus a velocity-dependent part $\beta c$ gives</p>
+
+$$2m\Delta\,\dot c = m\Delta g\sin\alpha-\gamma-\beta c.$$
+
+<p>The ruck propagates only if $m\Delta g\sin\alpha\gt \gamma$ (a depinning threshold), and then approaches the terminal velocity $c_\infty=(m\Delta g\sin\alpha-\gamma)/\beta$. On a level floor ($\alpha=0$) an undriven ruck coasts and decays; a hand supplies the force $F\approx\gamma$ to walk it along — the everyday experience of "chasing the wrinkle out of the rug."</p>
+
+<h3 id="driven">9.1 Driven by a moving load: phase-locking and $c=U$</h3>
+
+<p>The wheelchair of <a class="secref" href="#wheel">§0.2</a> raises a different question from the incline: a rolling load moves at <em>its</em> speed $U$, yet the ruck travels with it. Why should the ruck's speed equal the load's? The answer is phase-locking. Let the load be at $x_L(t)=Ut$ and the ruck centroid at $x_R(t)$, and define the lag
+$$\varphi=x_L-x_R.$$
+The load drives the ruck through a lag-dependent force $F(\varphi)$: a load sitting on the rear flank pushes the ruck forward (large $F$), while a load far ahead or behind exerts little ($F\to0$). With the effective mass $M_{\rm eff}=2m\Delta$ of Theorem 4 and the dissipation $\gamma+\beta c$ of <a class="secref" href="#incline">§9</a>, the coupled dynamics are
+$$M_{\rm eff}\,\dot c=F(\varphi)-\gamma-\beta c,\qquad \dot\varphi=U-c.\tag{9.2}$$
+</p>
+
+<div class="thm"><b>Theorem 6 (phase-locking of a load-driven ruck).</b> If the drive is strong enough, $\max_\varphi F(\varphi)\ge \gamma+\beta U$, then (9.2) has a stable steady state with
+$$\boxed{\,c=U,\qquad F(\varphi^\star)=\gamma+\beta U\,}$$
+the ruck travelling at exactly the load speed and riding at a fixed lag $\varphi^\star$ on the rising flank of $F$. If $\max_\varphi F\lt \gamma+\beta U$ the lock fails: the load slides over the ruck and no steady ruck persists.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 440 185" width="100%" role="img" aria-label="Lag between load and ruck, and the drive-versus-lag curve with a stable lock on its rising flank">
+  <defs>
+    <marker id="T6k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#555"/></marker>
+    <marker id="T6b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+  </defs>
+  <!-- left: lag schematic -->
+  <line x1="20" y1="80" x2="195" y2="80" stroke="#999" stroke-width="1.3"/>
+  <path d="M85,80 C108,80 110,42 132,42 C154,42 156,80 179,80" fill="none" stroke="#7a1f1f" stroke-width="2.2"/>
+  <circle cx="62" cy="64" r="16" fill="none" stroke="#444" stroke-width="2.2"/>
+  <line x1="55" y1="40" x2="83" y2="40" stroke="#1c5e8c" stroke-width="1.8" marker-end="url(#T6b)"/>
+  <text x="86" y="44" font-size="10" fill="#1c5e8c" font-style="italic">U</text>
+  <line x1="62" y1="95" x2="132" y2="95" stroke="#555" stroke-width="0.9" marker-start="url(#T6k)" marker-end="url(#T6k)"/>
+  <text x="86" y="108" font-size="10.5" fill="#555" font-style="italic">lag φ</text>
+  <text x="40" y="128" font-size="9.5" fill="#555" font-style="italic">load (x_L)   ruck (x_R)</text>
+  <!-- right: F(phi) plot -->
+  <line x1="250" y1="150" x2="430" y2="150" stroke="#555" stroke-width="1.1" marker-end="url(#T6k)"/>
+  <line x1="252" y1="155" x2="252" y2="28" stroke="#555" stroke-width="1.1" marker-end="url(#T6k)"/>
+  <text x="420" y="166" font-size="11" fill="#555" font-style="italic">φ</text>
+  <text x="232" y="30" font-size="11" fill="#555" font-style="italic">F</text>
+  <path d="M255,150 C295,150 305,48 335,48 C375,48 398,128 418,150" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <text x="330" y="42" font-size="10.5" fill="#7a1f1f" font-style="italic">F(φ)</text>
+  <line x1="252" y1="96" x2="425" y2="96" stroke="#1c5e8c" stroke-width="1.3" stroke-dasharray="5,3"/>
+  <text x="356" y="112" font-size="10" fill="#1c5e8c" font-style="italic">γ + βU</text>
+  <circle cx="302" cy="96" r="3.8" fill="#7a1f1f"/>
+  <text x="276" y="88" font-size="9.5" fill="#7a1f1f" font-style="italic">stable φ★</text>
+  <circle cx="389" cy="96" r="3.8" fill="none" stroke="#7a1f1f" stroke-width="1.5"/>
+  <text x="384" y="88" font-size="9.5" fill="#555" font-style="italic">unstable</text>
+</svg><figcaption><b>Setup.</b> The load leads the ruck by a lag $\varphi=x_L-x_R$ and drives it with a force $F(\varphi)$ (left). A steady state needs $\dot\varphi=0\Rightarrow c=U$ and $F(\varphi^\star)=\gamma+\beta U$ (right). The intersection on the <em>rising</em> flank ($F'\gt 0$) is stable; the lock exists only if $\max F\ge\gamma+\beta U$.</figcaption></figure>
+<em>Existence.</em> A fixed point of (9.2) needs $\dot\varphi=0\Rightarrow c=U$ and $\dot c=0\Rightarrow F(\varphi^\star)=\gamma+\beta U$. The latter is solvable for $\varphi^\star$ iff $\gamma+\beta U$ lies in the range of $F$, i.e. iff $\max_\varphi F\ge\gamma+\beta U$.<br>
+<em>Stability.</em> Perturb $c=U+\delta c$, $\varphi=\varphi^\star+\delta\varphi$. Linearizing (9.2): $M_{\rm eff}\,\delta\dot c=F'(\varphi^\star)\,\delta\varphi-\beta\,\delta c$ and $\delta\dot\varphi=-\delta c$. Eliminating $\delta c=-\delta\dot\varphi$ gives
+$$M_{\rm eff}\,\delta\ddot\varphi+\beta\,\delta\dot\varphi+F'(\varphi^\star)\,\delta\varphi=0,$$
+a damped linear oscillator, asymptotically stable iff $\beta\gt 0$ and $F'(\varphi^\star)\gt 0$ — that is, on the <em>rising</em> flank of $F$, where a load that falls behind pushes harder and catches up. Hence the lock at $c=U$ is stable. <span class="qed">∎</span>
+</div>
+
+<p><strong>Corollary (kinematics and transport).</strong> In the load's frame the runner is fed through a stationary ruck at speed $U$ — the caterpillar kinematics of Theorem 3 with $c=U$ — and the runner advances by one excess length $\Delta$ each time the load traverses its length (dislocation glide, <a class="secref" href="#dislocation">§10</a>, at imposed speed). Letting $U\to0$ recovers <a class="secref" href="#kinematics">§§7–9</a>: with no drive the ruck either pins (residual force $\lt \gamma$, it dies) or coasts inertially after a single kick. Thus the same equation governs the kicked ripple ($U=0$ free roll), the tilted floor (drive $=m\Delta g\sin\alpha$), and the wheelchair ($c=U$ lock) — three faces of one driven, dissipative defect.</p>
+
+<h2 id="dislocation">10. Why moving the ruck moves the whole carpet</h2>
+
+<p>The point of a ruck is locomotion: <strong>passing one ruck along the whole runner advances the runner by exactly $\Delta$</strong>. The excess length is carried from one end to the other and laid back down, so the rug ends up shifted by $\Delta$ while no part of it ever slides far — you move a heavy rug by sending a small, localized, conserved defect through it rather than dragging it bodily. (This is the soft-matter version of a dislocation gliding through a crystal to shear it one atomic step at a time, with $\Delta$ playing the role of the Burgers vector; we need only the elementary statement.) The payoff is that it is far cheaper than dragging:</p>
+
+<div class="prop"><b>Proposition 3 (rucking is energetically cheap).</b> To translate a runner of total mass $M$ and length $\mathcal L$ by a distance $D$:
+<figure><svg class="setupfig" viewBox="0 0 440 160" width="100%" role="img" aria-label="Dragging the whole rug versus moving a localized ruck">
+  <defs>
+    <marker id="P3k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222"/></marker>
+    <marker id="P3g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#2a7d2a"/></marker>
+  </defs>
+  <text x="10" y="18" font-size="12" fill="#1a1a1a" font-weight="bold">Dragging</text>
+  <line x1="14" y1="92" x2="200" y2="92" stroke="#999" stroke-width="1.3"/>
+  <rect x="24" y="76" width="150" height="14" rx="2" fill="#7a1f1f" fill-opacity="0.22" stroke="#7a1f1f" stroke-width="1.4"/>
+  <line x1="174" y1="83" x2="206" y2="83" stroke="#222" stroke-width="1.8" marker-end="url(#P3k)"/>
+  <!-- friction under whole length -->
+  <line x1="50" y1="104" x2="34" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P3g)"/>
+  <line x1="90" y1="104" x2="74" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P3g)"/>
+  <line x1="130" y1="104" x2="114" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P3g)"/>
+  <line x1="170" y1="104" x2="154" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P3g)"/>
+  <text x="14" y="128" font-size="10" fill="#2a7d2a" font-style="italic">friction on full weight</text>
+  <text x="14" y="144" font-size="10.5" fill="#222" font-style="italic">W = μ M g D</text>
+  <line x1="218" y1="10" x2="218" y2="150" stroke="#ddd" stroke-width="1"/>
+  <text x="232" y="18" font-size="12" fill="#1a1a1a" font-weight="bold">Rucking</text>
+  <line x1="234" y1="92" x2="430" y2="92" stroke="#999" stroke-width="1.3"/>
+  <line x1="240" y1="92" x2="430" y2="92" stroke="#7a1f1f" stroke-width="3"/>
+  <path d="M300,92 C314,92 316,62 332,62 C348,62 350,92 364,92" fill="none" stroke="#7a1f1f" stroke-width="2.4"/>
+  <line x1="372" y1="74" x2="404" y2="74" stroke="#222" stroke-width="1.8" marker-end="url(#P3k)"/>
+  <text x="382" y="68" font-size="9.5" fill="#222" font-style="italic">roll</text>
+  <!-- friction only at ruck -->
+  <line x1="338" y1="104" x2="322" y2="104" stroke="#2a7d2a" stroke-width="1.4" marker-end="url(#P3g)"/>
+  <text x="234" y="128" font-size="10" fill="#2a7d2a" font-style="italic">friction only at the defect</text>
+  <text x="234" y="144" font-size="10.5" fill="#222" font-style="italic">W ~ μ′ m g 𝓛 D   (μ′ ≪ μ)</text>
+</svg><figcaption><b>Setup.</b> Dragging slides the entire weight against kinetic friction $\mu$ over the whole path. Rucking instead rolls a localized defect, so friction $\mu'$ acts only on the small moving contact — replacing $\mu$ by the far smaller rolling/peel coefficient $\mu'$, the source of the $W_{\rm ruck}/W_{\rm drag}\sim\mu'/\mu$ saving.</figcaption></figure>
+<ul>
+<li><em>Dragging:</em> kinetic friction acts on the entire weight over the whole path, $W_{\rm drag}=\mu M g\,D$.</li>
+<li><em>Rucking:</em> each ruck traversal advances the runner by $\Delta$, so $N=D/\Delta$ traversals are needed; per traversal only the small contact region (mass $\sim m\Delta$) is in relative motion against the floor over the runner length $\mathcal L$, dissipating $W_1\sim \mu' (m\Delta)g\,\mathcal L$ (with $\mu'$ the effective rolling/peel friction coefficient). Total $W_{\rm ruck}\sim \mu' m g\,\mathcal L\,D$.</li>
+</ul>
+Hence
+$$\frac{W_{\rm ruck}}{W_{\rm drag}}\sim\frac{\mu'}{\mu}\frac{m\mathcal L}{M}=\frac{\mu'}{\mu},$$
+i.e. of order the ratio of (rolling/peel) to (sliding) friction coefficients, which is typically $10^{-1}$–$10^{-2}$. Rucking wins not by moving less mass overall, but by replacing global sliding friction with localized rolling/peeling at the defect.</div>
+
+<p class="small">The estimate uses $M=m\mathcal L$. The genuine saving is the substitution $\mu\to\mu'$: sliding the whole rug is replaced by a rolling contact line whose effective friction is far smaller, exactly as rolling resistance $\ll$ sliding friction. The same principle powers earthworm <em>peristalsis</em> (travelling waves of muscular contraction and expansion) and caterpillar (inchworm) locomotion: propel a localized contraction/expansion defect rather than translating the whole body at once.</p>
+
+<h2 id="example">11. Worked example with realistic numbers</h2>
+
+<p>Take a heavy textile runner: thickness $t=5\ \mathrm{mm}$, Young's modulus $E=1\ \mathrm{MPa}$ (a soft woven solid), areal density $\rho_A=2\ \mathrm{kg\,m^{-2}}$, excess length $\Delta=2\ \mathrm{cm}$, incline $\alpha=5^\circ$.</p>
+
+<table>
+<tr><th>Quantity</th><th>Formula</th><th>Value</th></tr>
+<tr><td>Bending stiffness</td><td>$B=Et^3/12$</td><td>$1.0\times10^6\cdot(5\!\times\!10^{-3})^3/12\approx1.04\times10^{-2}\ \mathrm{N\,m}$</td></tr>
+<tr><td>Weight per length</td><td>$w=\rho_A g$</td><td>$2\cdot9.8\approx19.6\ \mathrm{N\,m^{-2}}$</td></tr>
+<tr><td>Elasto-gravity length</td><td>$\ell_{eg}=(B/w)^{1/3}$</td><td>$(5.3\times10^{-4})^{1/3}\approx 8.1\ \mathrm{cm}$</td></tr>
+<tr><td>Ruck length</td><td>$\lambda_\star$, Eq. (5.3)</td><td>$\approx 28\ \mathrm{cm}$</td></tr>
+<tr><td>Ruck height</td><td>$h_\star=\tfrac2\pi\sqrt{\Delta\lambda_\star}$</td><td>$\approx 4.8\ \mathrm{cm}$</td></tr>
+<tr><td>Effective mass</td><td>$M_{\rm eff}=2m\Delta$, $m=\rho_A\cdot1\,\mathrm m$</td><td>$2\cdot2\cdot0.02=0.08\ \mathrm{kg\,m^{-1}}$</td></tr>
+<tr><td>Acceleration on slope</td><td>$a=\tfrac12 g\sin\alpha$</td><td>$\tfrac12\cdot9.8\cdot0.087\approx0.43\ \mathrm{m\,s^{-2}}$</td></tr>
+<tr><td>Speed after $1\ \mathrm m$</td><td>$c=\sqrt{2a\ell}$</td><td>$\approx0.92\ \mathrm{m\,s^{-1}}$</td></tr>
+</table>
+
+<p>A ruck about $28\ \mathrm{cm}$ long and $5\ \mathrm{cm}$ high, accelerating to roughly $1\ \mathrm{m\,s^{-1}}$ over a metre of gentle slope — squarely in agreement with the centimetre-to-decimetre rucks one sees on real runners and with table-top measurements.</p>
+
+<h2 id="summary">12. Summary of results</h2>
+
+<table>
+<tr><th>Result</th><th>Expression</th><th>Source</th></tr>
+<tr><td>Characteristic length</td><td>$\ell_{eg}=(B/w)^{1/3}$</td><td><a class="secref" href="#nd">§3</a></td></tr>
+<tr><td>Heavy-elastica equation</td><td>$B\theta''=w(L-s)\cos\theta+H\sin\theta$</td><td>Prop. 1</td></tr>
+<tr><td>First integral</td><td>$\tfrac B2\theta'^2=V\sin\theta+H\cos\theta-wy+\mathcal C$</td><td>Thm 1</td></tr>
+<tr><td>Pendulum reduction</td><td>$B\theta''=P\sin\theta$</td><td><a class="secref" href="#pendulum">§A2</a></td></tr>
+<tr><td>Small-slope shape</td><td>$y=\tfrac h2(1-\cos\tfrac{2\pi x}\lambda)$, $P=4\pi^2B/\lambda^2$</td><td>Prop. 2</td></tr>
+<tr><td>Geometry</td><td>$\Delta=\pi^2h^2/4\lambda$</td><td>Lem. 1</td></tr>
+<tr><td>Nucleation onset</td><td>$P_c\sim(Bw^2)^{1/3}=\kappa_0 B/\ell_{eg}^2$; subcritical, nucleus $\sim\ell_{eg}$</td><td>Thm 2½ (<a class="secref" href="#onset">§4.1</a>)</td></tr>
+<tr><td>Walking ratchet</td><td>$N_c\sim\ell_{eg}/\delta_{\rm net}$ steps to nucleate</td><td><a class="secref" href="#ratchet">§4.2</a></td></tr>
+<tr><td>Length/height selection</td><td>$\lambda_\star\sim\ell_{eg}(\Delta/\ell_{eg})^{1/7}$, $h_\star\sim\ell_{eg}(\Delta/\ell_{eg})^{4/7}$</td><td>Thm 2</td></tr>
+<tr><td>Velocity field</td><td>$|\mathbf v_{\rm lab}|=2c\sin(\theta/2)$ (cycloidal)</td><td>Thm 3</td></tr>
+<tr><td>Effective mass / KE</td><td>$M_{\rm eff}=2m\Delta$, $K=m\Delta c^2$</td><td>Thm 4</td></tr>
+<tr><td>Acceleration on incline</td><td>$a=\tfrac12 g\sin\alpha$ (hoop-like)</td><td>Thm 5</td></tr>
+<tr><td>Load-driven lock</td><td>$c=U$ phase-locked; lock fails if $\max F\lt \gamma+\beta U$</td><td>Thm 6 (<a class="secref" href="#driven">§9.1</a>)</td></tr>
+<tr><td>Defect correspondence</td><td>$\Delta\equiv$ Burgers vector; runner slips by $\Delta$ per pass</td><td><a class="secref" href="#dislocation">§10</a></td></tr>
+</table>
+
+<h2 id="firstint">A1. First integral of the heavy elastica (exact)</h2>
+
+<p class="small"><em>Appendix (A1–A3): the exact, fully nonlinear treatment — for tall rucks where the shallow-slope approximation of <a class="secref" href="#shape">§4</a> breaks down. None of it is needed for the main results; the body uses only the small-slope theory.</em></p>
+
+<p>We now seek a <em>first integral</em> — a combination of the unknowns that stays constant along the arc, lowering the order of the equilibrium equation by one (the elastica analogue of energy conservation). Let $(H,V(s))$ be the internal force resultant on a cross-section, $H$ constant and $V'=w$ (weight is the only body force). The constitutive and balance laws are</p>
+
+$$M=B\theta',\qquad \frac{dM}{ds}=V\cos\theta-H\sin\theta,\qquad \frac{dV}{ds}=w,\qquad \frac{dH}{ds}=0.\tag{A.1}$$
+
+<div class="thm"><b>Theorem 1 (first integral of the heavy elastica).</b> Along any equilibrium arc,
+$$\boxed{\;\tfrac{B}{2}\,(\theta')^2 \;=\; V\sin\theta+H\cos\theta-w\,y \;+\; \mathcal C\;}\tag{A.2}$$
+for a constant $\mathcal C$, where $y'=\sin\theta$ and $V(s)=V_0+ws$.</div>
+
+<div class="proof">
+<figure><svg class="setupfig" viewBox="0 0 440 190" width="100%" role="img" aria-label="Free body of a cross-section: internal resultant H and V, tangent, bending moment M, weight loading">
+  <defs>
+    <marker id="T1k" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#222"/></marker>
+    <marker id="T1b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1c5e8c"/></marker>
+    <marker id="T1g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a7d2a"/></marker>
+    <marker id="T1r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a1f1f"/></marker>
+  </defs>
+  <!-- arc segment up to the cut at P -->
+  <path d="M60,168 C150,168 180,90 250,74" fill="none" stroke="#7a1f1f" stroke-width="2.6"/>
+  <text x="60" y="150" font-size="10.5" fill="#555" font-style="italic">segment of the lifted arc</text>
+  <!-- weight loading along the segment: dV/ds = w -->
+  <line x1="120" y1="160" x2="120" y2="182" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#T1g)"/>
+  <line x1="165" y1="132" x2="165" y2="154" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#T1g)"/>
+  <line x1="205" y1="104" x2="205" y2="126" stroke="#2a7d2a" stroke-width="1.3" marker-end="url(#T1g)"/>
+  <text x="118" y="196" font-size="10.5" fill="#2a7d2a" font-style="italic">w  (dV/ds = w)</text>
+  <!-- cut at P with internal resultant -->
+  <circle cx="250" cy="74" r="3.2" fill="#222"/>
+  <line x1="250" y1="74" x2="330" y2="74" stroke="#1c5e8c" stroke-width="2.2" marker-end="url(#T1b)"/>
+  <text x="334" y="78" font-size="12" fill="#1c5e8c" font-style="italic">H  (dH/ds = 0)</text>
+  <line x1="250" y1="74" x2="250" y2="22" stroke="#1c5e8c" stroke-width="2.2" marker-end="url(#T1b)"/>
+  <text x="226" y="18" font-size="12" fill="#1c5e8c" font-style="italic">V(s)</text>
+  <line x1="250" y1="74" x2="322" y2="27" stroke="#1c5e8c" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- tangent t-hat -->
+  <line x1="250" y1="74" x2="312" y2="60" stroke="#222" stroke-width="1.6" marker-end="url(#T1k)"/>
+  <text x="288" y="52" font-size="11" fill="#222" font-style="italic">t̂ (θ)</text>
+  <!-- moment M -->
+  <path d="M232,92 A22,22 0 1 1 270,92" fill="none" stroke="#7a1f1f" stroke-width="1.6" marker-end="url(#T1r)"/>
+  <text x="236" y="118" font-size="11" fill="#7a1f1f" font-style="italic">M = Bθ′</text>
+</svg><figcaption><b>Setup.</b> Free body of the arc up to a section. The internal force resultant has a constant horizontal part $H$ ($dH/ds=0$, no horizontal body force) and a vertical part $V(s)$ that accumulates weight ($dV/ds=w$); the bending moment is $M=B\theta'$. Equilibrium gives the relations (A.1), whose combination integrates once to (A.2).</figcaption></figure>
+Differentiate the candidate "energy" $\mathcal H:=\tfrac B2(\theta')^2-V\sin\theta-H\cos\theta+wy$:
+$$\frac{d\mathcal H}{ds}=B\theta'\theta''-V'\sin\theta-V\theta'\cos\theta+H\theta'\sin\theta+w\,y'.$$
+By (A.1), $B\theta''=V\cos\theta-H\sin\theta$, so $B\theta'\theta''=\theta'(V\cos\theta-H\sin\theta)$. Substituting and using $V'=w$, $y'=\sin\theta$,
+$$\frac{d\mathcal H}{ds}=\theta'(V\cos\theta-H\sin\theta)-w\sin\theta-V\theta'\cos\theta+H\theta'\sin\theta+w\sin\theta=0.$$
+Every term cancels pairwise. Hence $\mathcal H$ is constant; writing $\mathcal C=-\mathcal H$ gives (A.2). <span class="qed">∎</span>
+</div>
+
+<p>Equation (A.2) with $y'=\sin\theta$ and $V=V_0+ws$ is a closed first-order system: the ruck shape reduces to <em>quadrature</em> (it can be recovered by evaluating integrals, with no further differential equation to solve). We now extract closed forms in the two analytically tractable limits.</p>
+
+<h2 id="pendulum">A2. Pendulum reduction and the gravity-free loop</h2>
+
+<p>For a ruck much shorter than $\ell_{eg}$, gravity is a regular perturbation of an exactly solvable problem: set $w=0$, $V\equiv 0$ (symmetric loop, no net vertical thrust). The first integral (A.2) becomes</p>
+
+$$\tfrac B2(\theta')^2=H\cos\theta+\mathcal C.\tag{A.3}$$
+
+<p>Differentiating gives $B\theta''=-H\sin\theta$, the <strong>pendulum equation</strong> — the celebrated isomorphism between the planar elastica and the simple pendulum (Kirchhoff's kinetic analogue), with arc length $s$ playing the role of time. A ruck is a compressive loop, so write $H=-P$ with thrust $P\gt 0$:</p>
+
+$$B\theta''=P\sin\theta.\tag{A.4}$$
+
+<p>A localized loop that decays to the flat state ($\theta,\theta'\to0$) is the <em>separatrix/homoclinic</em> orbit of (A.4) — in the pendulum analogue, the single trajectory that begins and ends at the upright equilibrium, i.e. the ruck profile that flattens out at both far ends. Its existence and the rotation of the tangent are governed by the conserved $\tfrac B2(\theta')^2+P\cos\theta$; the full closed form involves Jacobi elliptic functions and is given in the <a href="#appendix">Appendix</a>. The qualitative content we need now: a compressive thrust $P$ is required to hold a finite loop, and its scale is $P\sim B/\lambda^2$ — the Euler buckling scale, which we make exact next.</p>
+
+<h2 id="appendix">A3. The full nonlinear loop in elliptic integrals</h2>
+
+<p>For $\Delta\gtrsim\ell_{eg}$ the slope is $O(1)$ and one must integrate the exact system. Take the gravity-free symmetric loop ($w=0$, $V=0$) as the reference; the first integral (A.3) with thrust $P=-H\gt 0$ and the flat far-field condition $\theta'\to0$ as $\theta\to0$ fixes $\mathcal C$ and gives</p>
+
+$$\tfrac B2\,\theta'^2 = P\,(\,\cos\theta-\cos\theta_{\max}\,),\tag{A.5}$$
+
+<p>where $\theta_{\max}$ is the turning angle (tangent vertical/overhanging at the crest). Separating variables,</p>
+
+$$s(\theta)=\sqrt{\frac{B}{2P}}\int_0^{\theta}\frac{d\vartheta}{\sqrt{\cos\vartheta-\cos\theta_{\max}}},$$
+
+<p>which, with the standard substitution $\sin(\vartheta/2)=\sin(\theta_{\max}/2)\sin\psi$, reduces to incomplete elliptic integrals of the first kind $F(\psi,k)$ with modulus $k=\sin(\theta_{\max}/2)$ — Kirchhoff's pendulum analogue made explicit. The contour length and base then follow from</p>
+
+$$L=2\sqrt{\tfrac{B}{2P}}\;\frac{1}{...}\!\!\int,\qquad b=\int_0^L\cos\theta\,ds,\qquad \Delta=L-b,$$
+
+<p>and the Jacobi-amplitude inversion $\theta(s)=2\arcsin\!\big[k\,\mathrm{sn}(\,\cdot\,,k)\big]$ gives the profile in closed form. Restoring gravity ($w\neq0$) makes (A.5) the heavy-pendulum first integral (A.2); it no longer integrates in elementary elliptic functions but is solved numerically by quadrature with $V(s)=V_0+ws$. The exponents in Theorem 2 are unchanged; only the $O(1)$ prefactors shift.</p>
+
+<h2 id="refs">13. References and open problems</h2>
+<ul>
+<li>J. M. Kolinski, P. Aussillous, L. Mahadevan, <em>Shape and Motion of a Ruck in a Rug</em>, Phys. Rev. Lett. <b>103</b>, 174302 (2009). The founding analysis; source of the elasto-gravity scaling and the rolling propagation.</li>
+<li>A. E. H. Love, <em>A Treatise on the Mathematical Theory of Elasticity</em> — Euler elastica and Kirchhoff's kinetic analogue (<a class="secref" href="#pendulum">§A2</a>, Appendix).</li>
+<li>L. D. Landau &amp; E. M. Lifshitz, <em>Theory of Elasticity</em> — beam-column equation (4.1) and buckling.</li>
+<li>J. P. Hirth &amp; J. Lothe, <em>Theory of Dislocations</em> — Burgers vector, Peierls–Nabarro stress, dislocation effective mass (<a class="secref" href="#dislocation">§10</a>).</li>
+<li>B. Audoly &amp; Y. Pomeau, <em>Elasticity and Geometry</em> — nonlinear rods/sheets, localization of wrinkles into folds (<a class="secref" href="#regimes">§6</a>).</li>
+</ul>
+<p><strong>Open problems.</strong> (i) A first-principles model of the contact-line dissipation $\gamma,\beta$ (<a class="secref" href="#incline">§§9, 9.1</a>) and the drive $F(\varphi)$ from peel mechanics; (ii) the full subcritical bifurcation structure beyond the onset scaling of <a class="secref" href="#onset">§4.1</a> — barrier height, basin of attraction, and the competition between a periodic wrinkle train and a single localized ruck under gravitational confinement, together with a first-principles value for $\delta_{\rm net}$ (<a class="secref" href="#ratchet">§4.2</a>); (iii) ruck–ruck interactions and collisions (defect kinetics); (iv) the genuinely 2D ruck (curved across its width), where the planar assumption (A4) fails and <em>Gauss curvature</em> (the product of the two principal curvatures — nonzero only for doubly-curved, non-developable shapes) couples bending to stretching.</p>
+
+<hr>
+<p class="small">Single self-contained artifact; equations render via MathJax from CDN (needs network on first open). All boxed results are derived in-document. The $1/7$–$4/7$ exponents and $O(1)$ prefactors assume the small-slope, single-mode profile of <a class="secref" href="#shape">§4</a>; the nonlinear loop (Appendix) corrects prefactors only.</p>
+
+</body>
+</html>
