@@ -8,6 +8,10 @@ A mathematically rigorous, self-contained tutorial on the **ruck** — the trave
 
 📄 Source: [`ruck-in-a-rug.html`](ruck-in-a-rug.html) — one self-contained file (HTML + MathJax + inline SVG/SMIL, no build step).
 
+[![The Ruck in a Rug — preview of the live tutorial](preview.png)](https://az9713.github.io/ruck-in-a-rug/)
+
+<sub>☝ **Click the screenshot** to open the live, interactive tutorial (math typeset by MathJax; figures and animations rendered in-browser).</sub>
+
 > Note: GitHub READMEs render math unreliably, so the equations below are written in plain Unicode. The tutorial itself renders them properly via MathJax — see the live link.
 
 ---
